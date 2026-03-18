@@ -1,63 +1,64 @@
 import React, { useState, useEffect } from "react";
-import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 
-export default function PatternLogic({ onFinish, onScoreUpdate }) {
+const PatternLogic = ({ onFinish, onScoreUpdate }) => {
+  const items = ["🍎", "🍌", "🍇", "🍓", "🍍"];
   const [pattern, setPattern] = useState([]);
+  const [answer, setAnswer] = useState("");
   const [options, setOptions] = useState([]);
-  const [correctAnswer, setCorrectAnswer] = useState(null);
-  const { playSound } = useMathingoAudio();
+  const [level, setLevel] = useState(1);
+  const maxLevels = 10;
 
-  const emojis = ["🍎", "🍌", "🍇", "🍓", "🍍"];
-
-  const generatePattern = () => {
-    const item1 = emojis[Math.floor(Math.random() * emojis.length)];
-    let item2 = emojis[Math.floor(Math.random() * emojis.length)];
-    while (item1 === item2)
-      item2 = emojis[Math.floor(Math.random() * emojis.length)];
-
-    // نمط ABAB
-    const fullPattern = [item1, item2, item1, item2, item1];
-    setPattern(fullPattern);
-    setCorrectAnswer(item2);
-
-    // خيارات
-    const opts = [item2, item1, "🍊"].sort(() => Math.random() - 0.5);
-    setOptions(opts);
+  const generateLevel = () => {
+    const a = items[Math.floor(Math.random() * items.length)];
+    const b = items.filter((i) => i !== a)[
+      Math.floor(Math.random() * (items.length - 1))
+    ];
+    // نمط بسيط A-B-A-?
+    setPattern([a, b, a]);
+    setAnswer(b);
+    setOptions(
+      [a, b, items.find((i) => i !== a && i !== b)].sort(
+        () => Math.random() - 0.5
+      )
+    );
   };
 
   useEffect(() => {
-    generatePattern();
-  }, []);
+    generateLevel();
+  }, [level]);
 
-  const handleSelect = (choice) => {
-    if (choice === correctAnswer) {
-      playSound("success");
-      onScoreUpdate(50);
-      setTimeout(onFinish, 1500);
-    } else {
-      playSound("error");
+  const check = (opt) => {
+    if (opt === answer) {
+      onScoreUpdate(15);
+      if (level < maxLevels) setLevel(level + 1);
+      else onFinish();
     }
   };
 
   return (
-    <div className="mathingo-container pattern-game">
-      <h2 className="instruction-text">ماذا يأتي بعد ذلك؟ 🧐</h2>
-
-      <div className="pattern-display">
-        {pattern.map((emoji, i) => (
-          <div key={i} className="pattern-item">
-            {emoji}
-          </div>
-        ))}
-        <div className="pattern-item question-mark">?</div>
+    <div className="game-container">
+      <div className="level-badge">
+        المرحلة: {level} / {maxLevels}
       </div>
-
-      <div className="options-row">
+      <h3>أكمل النمط الجميل:</h3>
+      <div
+        style={{
+          fontSize: "3.5rem",
+          margin: "30px 0",
+          background: "#fff",
+          padding: "10px",
+          borderRadius: "20px",
+        }}
+      >
+        {pattern.join(" ")} <span style={{ color: "#ccc" }}>?</span>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: "15px" }}>
         {options.map((opt, i) => (
           <button
             key={i}
-            className="pattern-btn"
-            onClick={() => handleSelect(opt)}
+            className="choice-btn"
+            onClick={() => check(opt)}
+            style={{ fontSize: "3rem" }}
           >
             {opt}
           </button>
@@ -65,4 +66,5 @@ export default function PatternLogic({ onFinish, onScoreUpdate }) {
       </div>
     </div>
   );
-}
+};
+export default PatternLogic;

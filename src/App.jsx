@@ -89,10 +89,10 @@ export default function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>
+        <h2>
           مرحباً بكم في عالم ماتينجو الممتع 🐊{" "}
           <span className="score-badge">نقاطك: {score}</span>
-        </h1>
+        </h2>
         {currentGame && (
           <button className="back-btn" onClick={goToHub}>
             🏠 العودة للرئيسية

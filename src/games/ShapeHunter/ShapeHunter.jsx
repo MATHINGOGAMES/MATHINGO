@@ -45,49 +45,55 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
   return (
     <div
       className="game-container"
-      style={{ textAlign: "center", padding: "20px" }}
+      style={{ textAlign: "center", padding: "10px" }}
     >
       <div
         className="level-badge"
         style={{
           background: "#4caf50",
           color: "white",
-          padding: "10px 20px",
+          padding: "8px 15px",
           borderRadius: "50px",
           display: "inline-block",
-          marginBottom: "20px",
+          marginBottom: "15px",
+          fontSize: "1.2rem",
         }}
       >
         المرحلة: {level} / {maxLevels}
       </div>
 
-      <h2 style={{ fontSize: "1.8rem" }}>
-        أين هو الشكل:{" "}
-        <span style={{ fontSize: "4rem", display: "block" }}>{target}</span>
+      <h2 style={{ fontSize: "1.4rem", margin: "10px 0" }}>
+        أين هو الشكل:
+        <span
+          style={{ fontSize: "3.5rem", display: "block", margin: "10px 0" }}
+        >
+          {target}
+        </span>
       </h2>
 
+      {/* تحسين عرض الشبكة ليكون أخف على المعالج */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: level < 7 ? "1fr 1fr" : "1fr 1fr 1fr",
-          gap: "15px",
-          marginTop: "20px",
+          gridTemplateColumns: level < 7 ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
+          gap: "12px",
+          marginTop: "10px",
           justifyItems: "center",
         }}
       >
         {options.map((s, i) => (
           <button
-            key={i}
+            key={`${level}-${i}`} // تغيير الـ Key مع كل مستوى لتنشيط الأزرار
             onClick={() => check(s)}
             style={{
-              fontSize: "3.5rem",
-              width: "100px",
-              height: "100px",
+              fontSize: "3rem",
+              width: "85px",
+              height: "85px",
               background: "white",
               borderRadius: "20px",
-              border: "4px solid #f0f0f0",
+              border: "3px solid #f0f0f0",
               boxShadow: "0 4px #ddd",
-              cursor: "pointer",
+              touchAction: "manipulation", // تحسين استجابة اللمس على الهاتف
             }}
           >
             {s}
@@ -95,9 +101,10 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
         ))}
       </div>
 
-      <h3 style={{ marginTop: "25px", color: "#555" }}>{message}</h3>
+      <h3 style={{ marginTop: "20px", color: "#555", minHeight: "1.5em" }}>
+        {message}
+      </h3>
     </div>
   );
 };
-
 export default ShapeHunter;

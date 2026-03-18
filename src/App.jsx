@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import GamesHub from "./pages/GamesHub";
+import { useSound } from "./useSound"; // 1. استيراد أداة الصوت
 
-// 1. الاستيرادات (تأكد من إضافة PatternLogic)
+// الاستيرادات الخاصة بالألعاب
 import ComparingNumbers from "./games/ComparingNumbers/ComparingNumbers";
 import NumberSorting from "./games/NumberSorting/NumberSorting";
 import MemoryMatch from "./games/MemoryMatch/MemoryMatch";
 import AdditionBalance from "./games/AdditionBalance/AdditionBalance";
 import CountingFruits from "./games/CountingFruits/CountingFruits";
-import PatternLogic from "./games/PatternLogic/PatternLogic"; // أضف هذا السطر
+import PatternLogic from "./games/PatternLogic/PatternLogic";
 import NumberWords from "./games/NumberWords/NumberWords";
 import ShapeHunter from "./games/ShapeHunter/ShapeHunter";
 import ShadowMatch from "./games/ShadowMatch/ShadowMatch";
@@ -17,50 +18,61 @@ import ColorSorting from "./games/ColorSorting/ColorSorting";
 import MiniPuzzle from "./games/MiniPuzzle/MiniPuzzle";
 import TimeFun from "./games/TimeFun/TimeFun";
 import AnimalHome from "./games/AnimalHome/AnimalHome";
+
 export default function App() {
   const [currentGame, setCurrentGame] = useState(null);
   const [score, setScore] = useState(0);
 
-  const goToHub = () => setCurrentGame(null);
-  const updateScore = (points) => setScore((prev) => prev + points);
+  // 2. تفعيل الأصوات
+  const { playPop, playSuccess } = useSound();
+
+  const goToHub = () => {
+    playPop(); // صوت عند العودة للرئيسية
+    setCurrentGame(null);
+  };
+
+  const updateScore = (points) => {
+    if (points > 0) playSuccess(); // صوت عند الفوز بنقاط
+    setScore((prev) => prev + points);
+  };
+
+  const handleSelectGame = (id) => {
+    playPop(); // صوت عند اختيار لعبة
+    setCurrentGame(id);
+  };
 
   const renderGame = () => {
     switch (currentGame) {
-      // 2. تصحيح الأسماء والمكونات هنا:
-      case "counting-fruits": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "counting-fruits":
         return (
           <CountingFruits onFinish={goToHub} onScoreUpdate={updateScore} />
         );
-      case "animal-home": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "animal-home":
         return <AnimalHome onFinish={goToHub} onScoreUpdate={updateScore} />;
-      case "time-fun": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "time-fun":
         return <TimeFun onFinish={goToHub} onScoreUpdate={updateScore} />;
-      case "mini-puzzle": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "mini-puzzle":
         return <MiniPuzzle onFinish={goToHub} onScoreUpdate={updateScore} />;
-      case "color-sorting": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "color-sorting":
         return <ColorSorting onFinish={goToHub} onScoreUpdate={updateScore} />;
-      case "shadow-match": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "shadow-match":
         return <ShadowMatch onFinish={goToHub} onScoreUpdate={updateScore} />;
-      case "size-comparison": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "size-comparison":
         return (
           <SizeComparison onFinish={goToHub} onScoreUpdate={updateScore} />
         );
-      case "odd-one-out": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "odd-one-out":
         return <OddOneOut onFinish={goToHub} onScoreUpdate={updateScore} />;
-      case "shape-hunter": // تأكد أنها أحرف صغيرة كما في gamesConfig
+      case "shape-hunter":
         return <ShapeHunter onFinish={goToHub} onScoreUpdate={updateScore} />;
-
       case "pattern-logic":
         return <PatternLogic onFinish={goToHub} onScoreUpdate={updateScore} />;
-
       case "comparing-numbers":
         return (
           <ComparingNumbers onFinish={goToHub} onScoreUpdate={updateScore} />
         );
-
       case "number-sorting":
         return <NumberSorting onFinish={goToHub} onScoreUpdate={updateScore} />;
-
       case "memory-match":
         return <MemoryMatch onFinish={goToHub} onScoreUpdate={updateScore} />;
       case "number-words":
@@ -69,9 +81,8 @@ export default function App() {
         return (
           <AdditionBalance onFinish={goToHub} onScoreUpdate={updateScore} />
         );
-
       default:
-        return <GamesHub onSelectGame={(id) => setCurrentGame(id)} />;
+        return <GamesHub onSelectGame={handleSelectGame} />;
     }
   };
 

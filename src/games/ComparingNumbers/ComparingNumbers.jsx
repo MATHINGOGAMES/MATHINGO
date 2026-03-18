@@ -1,73 +1,81 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useMathingoAudio } from "../../hooks/useMathingoAudio";
+import React, { useState, useEffect } from "react";
 
-export default function ComparingNumbers({ onFinish, onScoreUpdate }) {
+const ComparingNumbers = ({ onFinish, onScoreUpdate }) => {
   const [num1, setNum1] = useState(0);
   const [num2, setNum2] = useState(0);
-  const [result, setResult] = useState(null); // 'success' | 'fail' | null
-  const { playSound, speak } = useMathingoAudio();
+  const [message, setMessage] = useState("أي العددين أكبر؟");
+  const [showResult, setShowResult] = useState(false); // لإخفاء التمساح
+  const [level, setLevel] = useState(1); // نظام المراحل
+  const maxLevels = 10;
 
-  const generateChallenge = useCallback(() => {
-    const n1 = Math.floor(Math.random() * 10) + 1;
-    const n2 = Math.floor(Math.random() * 10) + 1;
-    setNum1(n1);
-    setNum2(n2);
-    setResult(null);
-    speak("Which number is bigger?");
-  }, [speak]);
+  // توليد أرقام جديدة
+  const generateNumbers = () => {
+    setNum1(Math.floor(Math.random() * 10 * level)); // تزداد الصعوبة مع المرحلة
+    setNum2(Math.floor(Math.random() * 10 * level));
+    setShowResult(false);
+    setMessage("أي العددين أكبر؟");
+  };
 
   useEffect(() => {
-    generateChallenge();
-  }, [generateChallenge]);
+    generateNumbers();
+  }, [level]);
 
-  const checkAnswer = (operator) => {
-    let isCorrect = false;
-    if (operator === ">") isCorrect = num1 > num2;
-    if (operator === "<") isCorrect = num1 < num2;
-    if (operator === "=") isCorrect = num1 === num2;
+  const checkAnswer = (selectedNum) => {
+    const correct = Math.max(num1, num2);
+    setShowResult(true); // الآن نظهر التمساح بعد الإجابة فقط
 
-    if (isCorrect) {
-      setResult("success");
-      playSound("success");
-      speak("Great! The crocodile is happy!");
-      onScoreUpdate(20);
-      setTimeout(onFinish, 2000);
+    if (selectedNum === correct) {
+      setMessage("أحسنتِ! إجابة صحيحة 🐊✨");
+      onScoreUpdate(10);
+      setTimeout(() => {
+        if (level < maxLevels) {
+          setLevel(level + 1);
+        } else {
+          onFinish(); // إنهاء اللعبة بعد 10 مراحل
+        }
+      }, 1500);
     } else {
-      setResult("fail");
-      playSound("error");
-      speak("Oops! Try again.");
-      setTimeout(() => setResult(null), 1000);
+      setMessage("حاولي مرة أخرى! 🐊");
+      setTimeout(() => setShowResult(false), 1000); // إخفاء التمساح للمحاولة مجدداً
     }
   };
 
   return (
-    <div className="mathingo-container compare-game">
-      <h2 className="instruction-text">Help the hungry crocodile! 🐊</h2>
-
-      <div className="comparison-area">
-        <div className="number-box">{num1}</div>
-
-        <div className="operators-grid">
-          <button className="op-btn" onClick={() => checkAnswer(">")}>
-            {" "}
-            {num1 > num2 ? "🐊 >" : ">"}{" "}
-          </button>
-          <button className="op-btn" onClick={() => checkAnswer("=")}>
-            {" "}
-            ={" "}
-          </button>
-          <button className="op-btn" onClick={() => checkAnswer("<")}>
-            {" "}
-            {num2 > num1 ? "< 🐊" : "<"}{" "}
-          </button>
-        </div>
-
-        <div className="number-box">{num2}</div>
+    <div className="game-container">
+      <div className="level-badge">
+        المرحلة: {level} / {maxLevels}
       </div>
 
-      {result === "success" && (
-        <div className="celebration">🌟 Awesome! 🌟</div>
-      )}
+      <div
+        className="numbers-display"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "40px",
+          fontSize: "3rem",
+        }}
+      >
+        <button className="choice-btn" onClick={() => checkAnswer(num1)}>
+          {num1}
+        </button>
+
+        {/* التمساح يظهر هنا فقط إذا كانت showResult حقيقية */}
+        <div
+          className="result-icon"
+          style={{ visibility: showResult ? "visible" : "hidden" }}
+        >
+          {num1 > num2 ? " > " : num2 > num1 ? " < " : " = "}
+          🐊
+        </div>
+
+        <button className="choice-btn" onClick={() => checkAnswer(num2)}>
+          {num2}
+        </button>
+      </div>
+
+      <h3>{message}</h3>
     </div>
   );
-}
+};
+
+export default ComparingNumbers;

@@ -1,0 +1,720 @@
+.comparison-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.number-box {
+  width: 100px;
+  height: 100px;
+  background: white;
+  border: 4px solid var(--primary-blue);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+  box-shadow: 0 8px 0 var(--primary-blue);
+}
+
+.operators-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.op-btn {
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: #f7f7f7;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.op-btn:hover {
+  background: #e1f5fe;
+  border-color: var(--primary-blue);
+  transform: scale(1.05);
+}
+
+.celebration {
+  margin-top: 30px;
+  font-size: 2rem;
+  color: var(--primary-green);
+  animation: bounce 0.5s infinite;
+}
+/* ألوان ماتينجو الأساسية */
+:root {
+  --primary-blue: #1cb0f6;
+  --primary-green: #58cc02;
+  --error-red: #ff4b4b;
+}
+
+.compare-game {
+  text-align: center;
+  padding: 20px;
+}
+
+.comparison-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 40px;
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 30px;
+}
+
+.number-circle {
+  width: 90px;
+  height: 90px;
+  background: white;
+  border: 5px solid var(--primary-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  box-shadow: 0 6px 0 var(--primary-blue);
+}
+
+.operators-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.op-btn {
+  padding: 12px 25px;
+  font-size: 1.4rem;
+  background: white;
+  border: 3px solid #ddd;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.op-btn:hover {
+  border-color: var(--primary-blue);
+  background: #e1f5fe;
+}
+
+/* حركة الاهتزاز عند الخطأ */
+.shake {
+  animation: shakeAnim 0.4s;
+  border-color: var(--error-red);
+}
+
+@keyframes shakeAnim {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.memory-card {
+  height: 100px;
+  background: #fff;
+  border: 4px solid #1cb0f6;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  cursor: pointer;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  color: #ff4b4b;
+}
+.math-expression {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 30px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.num-box {
+  background: #f8f9fa;
+  padding: 10px 25px;
+  border-radius: 15px;
+  border-bottom: 5px solid #ddd;
+}
+
+.operator {
+  color: #ff4b4b;
+}
+
+.options-grid {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.opt-btn {
+  padding: 20px 40px;
+  font-size: 2rem;
+  border-radius: 20px;
+  border: none;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.opt-btn:hover {
+  transform: translateY(-5px);
+  background: #45a049;
+}
+.items-display {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin: 40px 0;
+  min-height: 150px;
+}
+
+.countable-item {
+  font-size: 4rem;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+  filter: grayscale(1) opacity(0.5); /* غير مفعل قبل اللمس */
+}
+
+.countable-item.active {
+  transform: scale(1.2);
+  filter: grayscale(0) opacity(1);
+  animation: itemPop 0.3s ease;
+}
+
+.options-row {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.option-btn {
+  width: 70px;
+  height: 70px;
+  font-size: 1.8rem;
+  border-radius: 15px;
+  border: 3px solid #e5e5e5;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.option-btn:hover {
+  background: #f0f7ff;
+  border-color: var(--primary-blue);
+}
+
+.option-btn.correct {
+  background: var(--primary-green);
+  color: white;
+  border-color: #45a002;
+}
+
+@keyframes itemPop {
+  0% {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+.fruits-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  border: 4px dashed #ffb74d;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+  min-height: 150px;
+}
+
+.fruit-emoji {
+  font-size: 3rem;
+  animation: bounce 0.5s ease infinite alternate;
+}
+
+.choices-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.choice-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: none;
+  background: #ff5722;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+}
+.pattern-display {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  background: #fdfdfd;
+  padding: 30px;
+  border-radius: 20px;
+  margin: 20px 0;
+  border: 3px solid #eee;
+}
+
+.pattern-item {
+  font-size: 3rem;
+}
+.question-mark {
+  color: #ff4b4b;
+  font-weight: bold;
+  border: 2px dashed #ff4b4b;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.pattern-btn {
+  font-size: 2.5rem;
+  padding: 15px 25px;
+  border-radius: 15px;
+  border: 2px solid #ddd;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.pattern-btn:hover {
+  transform: scale(1.1);
+  background: #f0f0f0;
+}
+/* تنسيقات لعبة الفقاعات */
+.sorting-game {
+  text-align: center;
+}
+
+.sorted-area {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 30px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  min-height: 80px;
+  max-width: 500px;
+}
+
+.sorted-bubble {
+  width: 60px;
+  height: 60px;
+  background: #4caf50;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.placeholder-slot {
+  width: 60px;
+  height: 60px;
+  border: 3px dashed #bbb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  font-size: 1.5rem;
+}
+
+.bubbles-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.bubble-btn {
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(circle at 30% 30%, #4fc3f7, #1cb0f6);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 20px rgba(28, 176, 246, 0.3);
+}
+
+.bubble-btn:hover {
+  transform: scale(1.1) translateY(-5px);
+}
+.bubble-btn:active {
+  transform: scale(0.9);
+}
+
+.hidden-bubble {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.bounce-in {
+  animation: bounce-in 0.5s ease-out;
+}
+.word-display {
+  font-size: 4rem;
+  color: #673ab7;
+  background: #f3e5f5;
+  padding: 20px 50px;
+  border-radius: 50px;
+  display: inline-block;
+  margin: 30px 0;
+  border: 5px solid #d1c4e9;
+  font-weight: bold;
+}
+
+.options-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.number-btn {
+  width: 80px;
+  height: 80px;
+  font-size: 2.5rem;
+  border-radius: 20px;
+  border: none;
+  background: #673ab7;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.number-btn:hover {
+  transform: scale(1.1);
+}
+/* --- تنسيقات لعبة صائد الأشكال --- */
+.shapes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 300px;
+  margin: 30px auto;
+}
+
+.shape-btn {
+  background: white;
+  border: 4px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shape-btn:hover {
+  transform: scale(1.05);
+  border-color: #2196f3;
+  background: #e3f2fd;
+}
+
+.shape-icon {
+  font-size: 3.5rem;
+}
+/* --- تنسيقات لعبة سباق الظلال --- */
+.shadow-preview {
+  background: #f0f0f0;
+  width: 150px;
+  height: 150px;
+  margin: 20px auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid #ccc;
+}
+
+.shadow-icon {
+  font-size: 5rem;
+  filter: brightness(0); /* هذه الخدعة تحول الإيموجي لظل أسود */
+  opacity: 0.7;
+}
+
+.item-btn {
+  font-size: 3rem;
+  background: white;
+  border: 3px solid #eee;
+  border-radius: 15px;
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.item-btn:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-blue);
+}
+/* --- تنسيقات لعبة أوجد المختلف --- */
+.odd-game .items-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 350px;
+  margin: 40px auto;
+}
+
+.odd-item-btn {
+  font-size: 4rem;
+  background: #ffffff;
+  border: 4px solid #f0f0f0;
+  border-radius: 25px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+}
+
+.odd-item-btn:hover {
+  transform: scale(1.05);
+  background: #fff9c4;
+  border-color: #fbc02d;
+}
+
+.odd-item-btn:active {
+  transform: scale(0.95);
+}
+/* --- تنسيقات لعبة مقارنة الأحجام --- */
+.size-options {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+}
+
+.size-btn {
+  background: white;
+  border: 4px solid #81d4fa;
+  border-radius: 30px;
+  padding: 30px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-width: 150px;
+}
+
+.size-btn .display-icon {
+  font-size: 5rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.size-btn .item-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0277bd;
+  margin: 0;
+}
+
+.size-btn:hover {
+  transform: scale(1.1) rotate(3deg);
+  background: #e1f5fe;
+  border-color: #03a9f4;
+}
+/* --- تنسيقات لعبة اللغز الصغير --- */
+.puzzle-display {
+  font-size: 6rem;
+  margin: 40px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 40px;
+  box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.empty-slot {
+  width: 100px;
+  height: 100px;
+  border: 4px dashed #ff9800;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff9800;
+  font-size: 3rem;
+  background: #fff3e0;
+}
+
+.puzzle-options {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.puzzle-opt-btn {
+  font-size: 3.5rem;
+  background: white;
+  border: 3px solid #e0e0e0;
+  border-radius: 25px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.puzzle-opt-btn:hover {
+  transform: scale(1.1) rotate(-5deg);
+  border-color: #ff9800;
+  background: #fffde7;
+}
+/* --- تنسيقات لعبة الوقت --- */
+.time-indicator {
+  font-size: 5rem;
+  width: 120px;
+  height: 120px;
+  margin: 20px auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.time-indicator.day { background: #fff9c4; color: #fbc02d; }
+.time-indicator.night { background: #303f9f; color: #fff; }
+
+.time-options {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.time-btn {
+  font-size: 4rem;
+  background: white;
+  border: 4px solid #e0e0e0;
+  border-radius: 30px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.time-btn:hover {
+  transform: translateY(-10px);
+  border-color: #3f51b5;
+  background: #f5f5f5;
+}
+/* --- تنسيقات لعبة أين منزلي --- */
+.animal-display {
+  font-size: 7rem;
+  margin: 30px auto;
+  width: 150px;
+  height: 150px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  border: 6px solid #ffccbc;
+}
+
+.home-options {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.home-btn {
+  font-size: 5rem;
+  background: #f1f8e9;
+  border: 4px solid #aed581;
+  border-radius: 35px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.home-btn:hover {
+  transform: scale(1.15);
+  background: #dcedc8;
+  border-color: #8bc34a;
+}

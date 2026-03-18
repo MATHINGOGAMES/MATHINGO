@@ -1,0 +1,112 @@
+// src/data/gamesConfig.js
+
+export const MATHINGO_GAMES = [
+  {
+    id: "comparing-numbers",
+    title: "تمساح الأرقام",
+    icon: "🐊",
+    color: "#ff5722",
+    minLevel: 1,
+  },
+  {
+    id: "number-sorting",
+    title: "ترتيب الفقاعات",
+    icon: "🎈",
+    color: "#1cb0f6",
+    minLevel: 1,
+  },
+  // أضف أي ألعاب أخرى هنا مستقبلاً
+  {
+    id: "memory-match",
+    title: "ذاكرة الأرقام",
+    icon: "🧠",
+    color: "#ffc107",
+    minLevel: 1,
+  },
+  {
+    id: "addition-balance",
+    title: "ميزان الجمع",
+    icon: "🧮",
+    color: "#4caf50",
+    minLevel: 1,
+  },
+  {
+    id: "counting-fruits",
+    title: "عد الفواكه",
+    icon: "🍎",
+    color: "#ff5722",
+    minLevel: 1,
+  },
+  {
+    id: "pattern-logic",
+    title: "إكمال النمط",
+    icon: "🧩",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+  {
+    id: "number-words",
+    title: "كلمات الأرقام",
+    icon: "📝",
+    color: "#673ab7",
+    minLevel: 1,
+  },
+  {
+    id: "shape-hunter",
+    title: "صائد الأشكال",
+    icon: "⭕",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+  {
+    id: "shadow-match",
+    title: "سباق الظلال",
+    icon: "👤",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+  {
+    id: "odd-one-out",
+    title: "أوجد الشكل المختلف",
+    icon: "🧐",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+  {
+    id: "size-comparison",
+    title: "الأكبر والأصغر",
+    icon: "🐘",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+ {
+    id: "color-sorting",
+    title: "فرز الألوانب",
+    icon: "🎨",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+{
+    id: "mini-puzzle",
+    title: "لغز الصورة",
+    icon: "🧩",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+{
+    id: "time-fun",
+    title: "وقت المرح",
+    icon: "⏰",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+{
+    id: "animal-home",
+    title: "أين منزلي؟",
+    icon: "🏡",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+
+
+];

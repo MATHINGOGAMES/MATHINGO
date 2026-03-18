@@ -31,22 +31,14 @@ export default function App() {
         return (
           <CountingFruits onFinish={goToHub} onScoreUpdate={updateScore} />
         );
-case "animal-home": // تأكد أنها أحرف صغيرة كما في gamesConfig
-        return (
-          <AnimalHome onFinish={goToHub} onScoreUpdate={updateScore} />
-        );
- case "time-fun": // تأكد أنها أحرف صغيرة كما في gamesConfig
-        return (
-          <TimeFun onFinish={goToHub} onScoreUpdate={updateScore} />
-        );
-case "mini-puzzle": // تأكد أنها أحرف صغيرة كما في gamesConfig
-        return (
-          <MiniPuzzle onFinish={goToHub} onScoreUpdate={updateScore} />
-        );
-        case "color-sorting": // تأكد أنها أحرف صغيرة كما في gamesConfig
-        return (
-          <ColorSorting onFinish={goToHub} onScoreUpdate={updateScore} />
-        );
+      case "animal-home": // تأكد أنها أحرف صغيرة كما في gamesConfig
+        return <AnimalHome onFinish={goToHub} onScoreUpdate={updateScore} />;
+      case "time-fun": // تأكد أنها أحرف صغيرة كما في gamesConfig
+        return <TimeFun onFinish={goToHub} onScoreUpdate={updateScore} />;
+      case "mini-puzzle": // تأكد أنها أحرف صغيرة كما في gamesConfig
+        return <MiniPuzzle onFinish={goToHub} onScoreUpdate={updateScore} />;
+      case "color-sorting": // تأكد أنها أحرف صغيرة كما في gamesConfig
+        return <ColorSorting onFinish={goToHub} onScoreUpdate={updateScore} />;
       case "shadow-match": // تأكد أنها أحرف صغيرة كما في gamesConfig
         return <ShadowMatch onFinish={goToHub} onScoreUpdate={updateScore} />;
       case "size-comparison": // تأكد أنها أحرف صغيرة كما في gamesConfig
@@ -87,7 +79,8 @@ case "mini-puzzle": // تأكد أنها أحرف صغيرة كما في gamesCo
     <div className="app-container">
       <header className="app-header">
         <h1>
-          ماتينجو 🐊 <span className="score-badge">نقاطك: {score}</span>
+          مرحباً بكم في عالم ماتينجو الممتع 🐊{" "}
+          <span className="score-badge">نقاطك: {score}</span>
         </h1>
         {currentGame && (
           <button className="back-btn" onClick={goToHub}>

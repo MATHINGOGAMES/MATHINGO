@@ -12,7 +12,6 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
     const newTarget = shapes[Math.floor(Math.random() * shapes.length)];
     setTarget(newTarget);
 
-    // تزداد الصعوبة: 4 أشكال في البداية ثم 6 ثم 9 أشكال!
     const count = level < 4 ? 4 : level < 7 ? 6 : 9;
 
     let newOptions = [newTarget];
@@ -20,7 +19,8 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
       const s = shapes[Math.floor(Math.random() * shapes.length)];
       if (!newOptions.includes(s)) newOptions.push(s);
     }
-    setOptions(newOptions.sort(() => Math.random() - 0.5));
+
+    setOptions([...newOptions].sort(() => Math.random() - 0.5));
     setMessage(`ابحث عن: ${newTarget}`);
   };
 
@@ -31,8 +31,12 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
   const check = (s) => {
     if (s === target) {
       onScoreUpdate(10);
+      setMessage("إجابة صحيحة! 🎉");
+
       if (level < maxLevels) {
-        setLevel(level + 1);
+        setTimeout(() => {
+          setLevel((prev) => prev + 1);
+        }, 800);
       } else {
         setMessage("بطلة الأشكال! 🎉");
         setTimeout(onFinish, 1500);
@@ -48,7 +52,6 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
       style={{ textAlign: "center", padding: "10px" }}
     >
       <div
-        className="level-badge"
         style={{
           background: "#4caf50",
           color: "white",
@@ -71,7 +74,6 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
         </span>
       </h2>
 
-      {/* تحسين عرض الشبكة ليكون أخف على المعالج */}
       <div
         style={{
           display: "grid",
@@ -83,7 +85,7 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
       >
         {options.map((s, i) => (
           <button
-            key={`${level}-${i}`} // تغيير الـ Key مع كل مستوى لتنشيط الأزرار
+            key={`${level}-${i}`}
             onClick={() => check(s)}
             style={{
               fontSize: "3rem",
@@ -93,7 +95,7 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
               borderRadius: "20px",
               border: "3px solid #f0f0f0",
               boxShadow: "0 4px #ddd",
-              touchAction: "manipulation", // تحسين استجابة اللمس على الهاتف
+              touchAction: "manipulation",
             }}
           >
             {s}
@@ -107,4 +109,5 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
     </div>
   );
 };
+
 export default ShapeHunter;

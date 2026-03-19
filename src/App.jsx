@@ -18,7 +18,8 @@ import ColorSorting from "./games/ColorSorting/ColorSorting";
 import MiniPuzzle from "./games/MiniPuzzle/MiniPuzzle";
 import TimeFun from "./games/TimeFun/TimeFun";
 import AnimalHome from "./games/AnimalHome/AnimalHome";
-
+import HalfMatch from "./games/HalfMatch/HalfMatch";
+import AnimalSounds from "./games/AnimalSounds/AnimalSounds";
 export default function App() {
   const [currentGame, setCurrentGame] = useState(null);
   const [score, setScore] = useState(0);
@@ -43,6 +44,10 @@ export default function App() {
 
   const renderGame = () => {
     switch (currentGame) {
+      case "Half-Match":
+        return <HalfMatch onFinish={goToHub} onScoreUpdate={updateScore} />;
+      case "Animal-Sounds":
+        return <AnimalSounds onFinish={goToHub} onScoreUpdate={updateScore} />;
       case "counting-fruits":
         return (
           <CountingFruits onFinish={goToHub} onScoreUpdate={updateScore} />
@@ -84,6 +89,38 @@ export default function App() {
       default:
         return <GamesHub onSelectGame={handleSelectGame} />;
     }
+    // دالة المشاركة الذكية
+    const shareGame = () => {
+      const text =
+        "اكتشفت هذا الموقع الرائع (Mathingo) لألعاب الذكاء والحساب للأطفال! آمن، تعليمي وبدون إعلانات. جربه مع أطفالك: ";
+      const url = window.location.href;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+        text + url
+      )}`;
+      window.open(whatsappUrl, "_blank");
+    };
+
+    // داخل الـ return في App.jsx، أضيفي هذا الزر الجذاب:
+    <button
+      onClick={shareGame}
+      style={{
+        backgroundColor: "#25D366", // لون واتساب الأخضر
+        color: "white",
+        padding: "15px 25px",
+        borderRadius: "50px",
+        border: "none",
+        fontSize: "1.2rem",
+        fontWeight: "bold",
+        margin: "20px auto",
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        cursor: "pointer",
+        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+      }}
+    >
+      <span>أرسل اللعبة لصديق عبر واتساب</span> 🚀
+    </button>;
   };
 
   return (

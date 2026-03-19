@@ -79,34 +79,46 @@ export const MATHINGO_GAMES = [
     color: "#9c27b0",
     minLevel: 1,
   },
- {
+  {
+    id: "Animal-Sounds",
+    title: "الأكبر والأصغر",
+    icon: "🐥",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+  {
+    id: "Half-Match",
+    title: "الأكبر والأصغر",
+    icon: "🌓",
+    color: "#9c27b0",
+    minLevel: 1,
+  },
+  {
     id: "color-sorting",
     title: "فرز الألوانب",
     icon: "🎨",
     color: "#9c27b0",
     minLevel: 1,
   },
-{
+  {
     id: "mini-puzzle",
     title: "لغز الصورة",
     icon: "🧩",
     color: "#9c27b0",
     minLevel: 1,
   },
-{
+  {
     id: "time-fun",
     title: "وقت المرح",
     icon: "⏰",
     color: "#9c27b0",
     minLevel: 1,
   },
-{
+  {
     id: "animal-home",
     title: "أين منزلي؟",
     icon: "🏡",
     color: "#9c27b0",
     minLevel: 1,
   },
-
-
 ];

@@ -1,63 +1,73 @@
 import React, { useState, useEffect } from "react";
-import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 
-export default function ColorSorting({ onFinish, onScoreUpdate }) {
-  const { playSound, speak } = useMathingoAudio();
-  const [targetColor, setTargetColor] = useState({});
-  const [options, setOptions] = useState([]);
-
-  const colorData = [
-    { id: 'red', name: 'أحمر', hex: '#ff1744', items: ['🍎', '🚗', '🍓'] },
-    { id: 'blue', name: 'أزرق', hex: '#2979ff', items: ['🐳', '🦋', '🚲'] },
-    { id: 'green', name: 'أخضر', hex: '#00e676', items: ['🌳', '🐢', '🍐'] },
-    { id: 'yellow', name: 'أصفر', hex: '#ffea00', items: ['🍌', '☀️', '🐥'] }
+const ColorSorting = ({ onFinish, onScoreUpdate }) => {
+  const colors = [
+    { name: "أحمر", hex: "#FF0000" },
+    { name: "أزرق", hex: "#0000FF" },
+    { name: "أخضر", hex: "#008000" },
+    { name: "أصفر", hex: "#FFFF00" },
+    { name: "برتقالي", hex: "#FFA500" },
+    { name: "بنفسجي", hex: "#800080" },
   ];
 
+  const [level, setLevel] = useState(1);
+  const [target, setTarget] = useState(colors[0]);
+  const [options, setOptions] = useState([]);
+  const maxLevels = 10;
+
   const generateLevel = () => {
-    // اختيار لون عشوائي ليكون الهدف
-    const randomColor = colorData[Math.floor(Math.random() * colorData.length)];
-    setTargetColor(randomColor);
-
-    // اختيار عنصر واحد من كل لون كخيارات
-    const levelOptions = colorData.map(c => ({
-      colorId: c.id,
-      icon: c.items[Math.floor(Math.random() * c.items.length)]
-    }));
-    
-    setOptions(levelOptions.sort(() => Math.random() - 0.5));
-    speak(`Find the item that is ${randomColor.id}`);
+    const newTarget = colors[Math.floor(Math.random() * colors.length)];
+    setTarget(newTarget);
+    // خيارات عشوائية تتضمن اللون الصحيح
+    const shuffled = [...colors].sort(() => Math.random() - 0.5).slice(0, 3);
+    if (!shuffled.find((c) => c.hex === newTarget.hex)) shuffled[0] = newTarget;
+    setOptions(shuffled.sort(() => Math.random() - 0.5));
   };
 
-  useEffect(() => { generateLevel(); }, []);
-
-  const handleSelect = (selectedColorId) => {
-    if (selectedColorId === targetColor.id) {
-      playSound('success');
-      onScoreUpdate(40);
-      setTimeout(onFinish, 1500);
-    } else {
-      playSound('error');
-    }
-  };
+  useEffect(() => {
+    generateLevel();
+  }, [level]);
 
   return (
-    <div className="mathingo-container color-game">
-      <h2 className="instruction-text">أيّ من هذه الأشياء لونه {targetColor.name}؟</h2>
-      
-      {/* عرض مربع اللون المستهدف */}
-      <div className="color-target-box" style={{ backgroundColor: targetColor.hex }}></div>
-
-      <div className="color-options-grid">
-        {options.map((opt, index) => (
-          <button 
-            key={index} 
-            className="color-item-btn" 
-            onClick={() => handleSelect(opt.colorId)}
-          >
-            {opt.icon}
-          </button>
+    <div className="game-container">
+      <div className="level-badge">
+        المرحلة: {level} / {maxLevels}
+      </div>
+      <h2 style={{ fontSize: "2rem" }}>أين هو اللون:</h2>
+      <div
+        style={{
+          fontSize: "3rem",
+          fontWeight: "bold",
+          margin: "20px",
+          color: "#333",
+        }}
+      >
+        {target.name}
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
+        {options.map((col, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              if (col.hex === target.hex) {
+                onScoreUpdate(10);
+                if (level < maxLevels)
+                  setTimeout(() => setLevel(level + 1), 500);
+                else onFinish();
+              }
+            }}
+            style={{
+              width: "100px",
+              height: "100px",
+              backgroundColor: col.hex,
+              borderRadius: "50%",
+              border: "5px solid white",
+              boxShadow: "0 4px #ccc",
+            }}
+          />
         ))}
       </div>
     </div>
   );
-}
+};
+export default ColorSorting;

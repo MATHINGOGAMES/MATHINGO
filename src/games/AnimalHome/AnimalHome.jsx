@@ -1,55 +1,65 @@
 import React, { useState, useEffect } from "react";
-import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 
-export default function AnimalHome({ onFinish, onScoreUpdate }) {
-  const { playSound, speak } = useMathingoAudio();
-  const [level, setLevel] = useState({});
-
+const AnimalHome = ({ onFinish, onScoreUpdate }) => {
   const pairs = [
-    { animal: "🐦", home: "🪹", name: "العصفور" },
-    { animal: "🐝", home: "🍯", name: "النحلة" },
-    { animal: "🐠", home: "🌊", name: "السمكة" },
-    { animal: "🐶", home: "🏠", name: "الكلب" },
-    { animal: "🦁", home: "⛰️", name: "الأسد" }
+    { animal: "🐒", target: "🍌" },
+    { animal: "🐰", target: "🥕" },
+    { animal: "🐝", target: "🌻" },
+    { animal: "🐱", target: "🐟" },
+    { animal: "🐶", target: "🦴" },
+    { animal: "🐦", target: "🌲" },
   ];
 
+  const [level, setLevel] = useState(1);
+  const [currentPair, setCurrentPair] = useState(pairs[0]);
+  const [options, setOptions] = useState([]);
+  const maxLevels = 10;
+
   const generateLevel = () => {
-    const correctPair = pairs[Math.floor(Math.random() * pairs.length)];
-    const otherHomes = pairs.filter(p => p.home !== correctPair.home).map(p => p.home);
-    const wrongHome = otherHomes[Math.floor(Math.random() * otherHomes.length)];
-
-    const options = [correctPair.home, wrongHome].sort(() => Math.random() - 0.5);
-    
-    setLevel({ ...correctPair, options });
-    speak(`Where does the ${correctPair.animal} live?`);
+    const pair = pairs[Math.floor(Math.random() * pairs.length)];
+    setCurrentPair(pair);
+    // خيارات عشوائية تتضمن الإجابة الصحيحة
+    const otherTargets = pairs
+      .filter((p) => p.target !== pair.target)
+      .map((p) => p.target);
+    const shuffledOptions = [
+      pair.target,
+      ...otherTargets.sort(() => Math.random() - 0.5).slice(0, 2),
+    ];
+    setOptions(shuffledOptions.sort(() => Math.random() - 0.5));
   };
 
-  useEffect(() => { generateLevel(); }, []);
-
-  const handleSelect = (home) => {
-    if (home === level.home) {
-      playSound('success');
-      onScoreUpdate(60); // مكافأة أكبر للعبة الختامية
-      setTimeout(onFinish, 1500);
-    } else {
-      playSound('error');
-    }
-  };
+  useEffect(() => {
+    generateLevel();
+  }, [level]);
 
   return (
-    <div className="mathingo-container home-game">
-      <h2 className="instruction-text">ساعد {level.name} في العثور على بيته! 🏠</h2>
-      
-      <div className="animal-display bounce-in">
-        {level.animal}
+    <div className="game-container">
+      <div className="level-badge">
+        المرحلة: {level} / {maxLevels}
       </div>
-
-      <div className="home-options">
-        {level.options?.map((opt, index) => (
-          <button 
-            key={index} 
-            className="home-btn" 
-            onClick={() => handleSelect(opt)}
+      <h2 style={{ fontSize: "1.5rem" }}>ماذا يحب هذا الحيوان؟</h2>
+      <div style={{ fontSize: "7rem", margin: "20px" }}>
+        {currentPair.animal}
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: "15px" }}>
+        {options.map((opt, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              if (opt === currentPair.target) {
+                onScoreUpdate(10);
+                if (level < maxLevels)
+                  setTimeout(() => setLevel(level + 1), 600);
+                else onFinish();
+              }
+            }}
+            style={{
+              fontSize: "3.5rem",
+              padding: "10px",
+              background: "white",
+              borderRadius: "20px",
+            }}
           >
             {opt}
           </button>
@@ -57,4 +67,5 @@ export default function AnimalHome({ onFinish, onScoreUpdate }) {
       </div>
     </div>
   );
-}
+};
+export default AnimalHome;

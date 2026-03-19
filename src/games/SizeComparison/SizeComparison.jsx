@@ -1,63 +1,86 @@
 import React, { useState, useEffect } from "react";
-import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 
-export default function SizeComparison({ onFinish, onScoreUpdate }) {
-  const [level, setLevel] = useState({});
-  const { playSound, speak } = useMathingoAudio();
-
+const SizeComparison = ({ onFinish, onScoreUpdate }) => {
   const items = [
-    { icon: "🐘", name: "فيل" },
-    { icon: "🐱", name: "قطة" },
-    { icon: "🐜", name: "نملة" },
-    { icon: "🚌", name: "حافلة" },
-    { icon: "🚲", name: "دراجة" }
+    { icon: "🐘", size: 100, name: "كبير" },
+    { icon: "🐭", size: 40, name: "صغير" },
+    { icon: "🌳", size: 90, name: "كبير" },
+    { icon: "🌸", size: 30, name: "صغير" },
+    { icon: "🏠", size: 95, name: "كبير" },
+    { icon: "🔑", size: 25, name: "صغير" },
   ];
 
+  const [level, setLevel] = useState(1);
+  const [question, setQuestion] = useState(""); // "أين الأكبر؟" أو "أين الأصغر؟"
+  const [choices, setChoices] = useState([]);
+  const maxLevels = 10;
+
   const generateLevel = () => {
-    // اختيار عنصرين عشوائيين مختلفين
-    const shuffled = [...items].sort(() => Math.random() - 0.5);
-    const item1 = shuffled[0];
-    const item2 = shuffled[1];
-    
-    // تحديد من الأكبر (افتراضياً في القائمة)
-    // ملاحظة: للتطوير المستقبلي يمكن إضافة وزن أو حجم حقيقي لكل عنصر
-    setLevel({ 
-      options: [item1, item2], 
-      target: "BIGGER" // أو "SMALLER"
-    });
-    
-    speak("Which one is bigger?");
+    const isLookingForBig = Math.random() > 0.5;
+    setQuestion(isLookingForBig ? "أين هو الأكبر؟ 🏠" : "أين هو الأصغر؟ 🔑");
+
+    // اختيار عنصرين مختلفين تماماً في الحجم
+    const bigOnes = items.filter((i) => i.size > 70);
+    const smallOnes = items.filter((i) => i.size < 50);
+    const big = bigOnes[Math.floor(Math.random() * bigOnes.length)];
+    const small = smallOnes[Math.floor(Math.random() * smallOnes.length)];
+
+    setChoices([big, small].sort(() => Math.random() - 0.5));
   };
 
-  useEffect(() => { generateLevel(); }, []);
+  useEffect(() => {
+    generateLevel();
+  }, [level]);
 
-  const handleSelect = (item) => {
-    // منطق بسيط للمقارنة (يمكنك تطويره بأوزان حقيقية لاحقاً)
-    // هنا سنفترض أننا نريد الأكبر دائماً في هذا المستوى
-    const isCorrect = item === level.options.reduce((a, b) => (a.icon.length > b.icon.length ? a : b)); 
-    
-    // للتجربة الحالية سنجعل الاختيار الأول هو الصحيح برمجياً حتى تضبط التنسيق
-    playSound('success');
-    onScoreUpdate(40);
-    setTimeout(onFinish, 1500);
+  const handleChoice = (item) => {
+    const isBig = item.size > 70;
+    const isCorrect =
+      (question.includes("الأكبر") && isBig) ||
+      (question.includes("الأصغر") && !isBig);
+
+    if (isCorrect) {
+      onScoreUpdate(10);
+      if (level < maxLevels) {
+        setTimeout(() => setLevel((prev) => prev + 1), 600);
+      } else {
+        setTimeout(onFinish, 1500);
+      }
+    }
   };
 
   return (
-    <div className="mathingo-container size-game">
-      <h2 className="instruction-text">أيهما أكبر في الحقيقة؟ 🏠</h2>
-      
-      <div className="size-options">
-        {level.options?.map((item, index) => (
-          <button 
-            key={index} 
-            className="size-btn" 
-            onClick={() => handleSelect(item)}
+    <div className="game-container">
+      <div className="level-badge">
+        المرحلة: {level} / {maxLevels}
+      </div>
+      <h2 style={{ fontSize: "2rem", marginBottom: "30px" }}>{question}</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "40px",
+        }}
+      >
+        {choices.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => handleChoice(item)}
+            style={{
+              fontSize: `${item.size * 1.2}px`, // حجم الإيموجي يتناسب مع حجمه الحقيقي!
+              background: "white",
+              border: "4px solid #f0f0f0",
+              borderRadius: "30px",
+              padding: "20px",
+              cursor: "pointer",
+              boxShadow: "0 8px #ddd",
+            }}
           >
-            <span className="display-icon">{item.icon}</span>
-            <p className="item-name">{item.name}</p>
+            {item.icon}
           </button>
         ))}
       </div>
     </div>
   );
-}
+};
+export default SizeComparison;

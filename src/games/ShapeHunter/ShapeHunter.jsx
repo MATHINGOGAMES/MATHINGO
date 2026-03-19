@@ -12,7 +12,7 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
     const newTarget = shapes[Math.floor(Math.random() * shapes.length)];
     setTarget(newTarget);
 
-    const count = level < 4 ? 4 : level < 7 ? 6 : 9;
+    const count = Math.min(level < 4 ? 4 : level < 7 ? 6 : 9, shapes.length);
 
     let newOptions = [newTarget];
     while (newOptions.length < count) {
@@ -31,12 +31,9 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
   const check = (s) => {
     if (s === target) {
       onScoreUpdate(10);
-      setMessage("إجابة صحيحة! 🎉");
 
       if (level < maxLevels) {
-        setTimeout(() => {
-          setLevel((prev) => prev + 1);
-        }, 800);
+        setLevel((prev) => prev + 1);
       } else {
         setMessage("بطلة الأشكال! 🎉");
         setTimeout(onFinish, 1500);
@@ -65,14 +62,11 @@ const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
         المرحلة: {level} / {maxLevels}
       </div>
 
-      <h2 style={{ fontSize: "1.4rem", margin: "10px 0" }}>
-        أين هو الشكل:
-        <span
-          style={{ fontSize: "3.5rem", display: "block", margin: "10px 0" }}
-        >
-          {target}
-        </span>
-      </h2>
+      <h2 style={{ fontSize: "1.4rem", margin: "10px 0" }}>أين هو الشكل:</h2>
+
+      <div style={{ marginBottom: "15px" }}>
+        <span style={{ fontSize: "3.5rem" }}>{target}</span>
+      </div>
 
       <div
         style={{

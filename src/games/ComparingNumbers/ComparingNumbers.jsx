@@ -1,81 +1,56 @@
-import React, { useState, useEffect } from "react";
+// src/games/ComparingNumbers/ComparingNumbers.jsx
+import React, { useState } from "react";
+import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 
-const ComparingNumbers = ({ onFinish, onScoreUpdate }) => {
-  const [num1, setNum1] = useState(0);
-  const [num2, setNum2] = useState(0);
-  const [message, setMessage] = useState("أي العددين أكبر؟");
-  const [showResult, setShowResult] = useState(false); // لإخفاء التمساح
-  const [level, setLevel] = useState(1); // نظام المراحل
-  const maxLevels = 10;
+export default function ComparingNumbers({ onFinish, onScoreUpdate }) {
+  const { playSound } = useMathingoAudio();
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [score, setScore] = useState(0);
 
-  // توليد أرقام جديدة
-  const generateNumbers = () => {
-    setNum1(Math.floor(Math.random() * 10 * level)); // تزداد الصعوبة مع المرحلة
-    setNum2(Math.floor(Math.random() * 10 * level));
-    setShowResult(false);
-    setMessage("أي العددين أكبر؟");
-  };
+  const questions = [
+    { a: 3, b: 5 },
+    { a: 8, b: 2 },
+    { a: 4, b: 4 },
+  ];
 
-  useEffect(() => {
-    generateNumbers();
-  }, [level]);
+  const handleAnswer = (choice) => {
+    const correct =
+      (choice === ">" &&
+        questions[questionIndex].a > questions[questionIndex].b) ||
+      (choice === "<" &&
+        questions[questionIndex].a < questions[questionIndex].b) ||
+      (choice === "=" &&
+        questions[questionIndex].a === questions[questionIndex].b);
 
-  const checkAnswer = (selectedNum) => {
-    const correct = Math.max(num1, num2);
-    setShowResult(true); // الآن نظهر التمساح بعد الإجابة فقط
-
-    if (selectedNum === correct) {
-      setMessage("أحسنتِ! إجابة صحيحة 🐊✨");
-      onScoreUpdate(10);
-      setTimeout(() => {
-        if (level < maxLevels) {
-          setLevel(level + 1);
-        } else {
-          onFinish(); // إنهاء اللعبة بعد 10 مراحل
-        }
-      }, 1500);
+    if (correct) {
+      playSound("success");
+      setScore((prev) => prev + 1);
+      onScoreUpdate && onScoreUpdate(1);
     } else {
-      setMessage("حاولي مرة أخرى! 🐊");
-      setTimeout(() => setShowResult(false), 1000); // إخفاء التمساح للمحاولة مجدداً
+      playSound("error");
+    }
+
+    if (questionIndex + 1 < questions.length) {
+      setQuestionIndex(questionIndex + 1);
+    } else {
+      onFinish && onFinish();
     }
   };
 
+  const q = questions[questionIndex];
+
   return (
-    <div className="game-container">
-      <div className="level-badge">
-        المرحلة: {level} / {maxLevels}
+    <div style={{ padding: 20 }}>
+      <h2>📝 أي الأرقام أكبر؟</h2>
+      <p style={{ fontSize: 32 }}>
+        {q.a} ? {q.b}
+      </p>
+      <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+        <button onClick={() => handleAnswer(">")}>{">"}</button>
+        <button onClick={() => handleAnswer("<")}>{"<"}</button>
+        <button onClick={() => handleAnswer("=")}>=</button>
       </div>
-
-      <div
-        className="numbers-display"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "40px",
-          fontSize: "3rem",
-        }}
-      >
-        <button className="choice-btn" onClick={() => checkAnswer(num1)}>
-          {num1}
-        </button>
-
-        {/* التمساح يظهر هنا فقط إذا كانت showResult حقيقية */}
-        <div
-          className="result-icon"
-          style={{ visibility: showResult ? "visible" : "hidden" }}
-        >
-          {num1 > num2 ? " > " : num2 > num1 ? " < " : " = "}
-          🐊
-        </div>
-
-        <button className="choice-btn" onClick={() => checkAnswer(num2)}>
-          {num2}
-        </button>
-      </div>
-
-      <h3>{message}</h3>
+      <p>النقاط الحالية: {score}</p>
     </div>
   );
-};
-
-export default ComparingNumbers;
+}

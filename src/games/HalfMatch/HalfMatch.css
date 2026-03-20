@@ -1,0 +1,134 @@
+/* شاشة البداية بنمط الصورة المرسلة */
+.mathingo-start-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* لون خلفية الصورة المرسلة */
+  background-color: #ff9f8c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-family: "Cairo", sans-serif;
+}
+
+.mathingo-card {
+  background: white;
+  padding: 40px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  width: auto;
+  min-width: 350px;
+}
+
+.mathingo-icon {
+  font-size: 100px;
+  margin-bottom: 25px;
+  animation: bounce 1.5s infinite;
+}
+
+.mathingo-title {
+  color: #333;
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
+
+.mathingo-btn-primary {
+  background-color: #58cc02; /* اللون الأخضر في الصورة */
+  color: white;
+  border: none;
+  padding: 18px 50px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 8px 0 #46a302;
+  transition: all 0.1s;
+}
+
+.mathingo-btn-primary:active {
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 #46a302;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* التنسيقات العامة للعبة الذاكرة */
+.memory-grid {
+  display: grid;
+  gap: 15px;
+  justify-content: center;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(2, 90px);
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(3, 90px);
+}
+.grid-size-8 {
+  grid-template-columns: repeat(4, 80px);
+}
+
+.memory-card {
+  width: 100%;
+  height: 90px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.memory-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-front {
+  background: white;
+  transform: rotateY(180deg);
+  border: 3px solid #ffcc00;
+}
+
+.card-back {
+  background: #ffcc00;
+  color: white;
+  font-size: 1.5rem;
+  border-bottom: 5px solid #e6b800;
+}
+
+/* ألوان مراحل الذاكرة */
+.stage-1 {
+  background: #ffcf4b;
+}
+.stage-2 {
+  background: #4bffa5;
+}
+.stage-3 {
+  background: #4b90ff;
+}

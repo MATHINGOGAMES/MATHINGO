@@ -1,40 +1,45 @@
-import React, { useState, useEffect } from "react";
+// src/games/AnimalSounds/AnimalSounds.jsx
+import React, { useState } from "react";
+import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 
-const AnimalSounds = ({ onFinish, onScoreUpdate }) => {
+export default function AnimalSounds({ onFinish, onScoreUpdate }) {
+  const { playSound, speak } = useMathingoAudio();
+  const [score, setScore] = useState(0);
   const animals = [
-    { icon: "🐱", sound: "مواء" }, { icon: "🐶", sound: "نباح" },
-    { icon: "🦁", sound: "زئير" }, { icon: "🐑", sound: "ثغاء" }
+    { name: "🐶", sound: "Woof" },
+    { name: "🐱", sound: "Meow" },
+    { name: "🐄", sound: "Moo" },
   ];
-  const [level, setLevel] = useState(1);
-  const [target, setTarget] = useState(animals[0]);
-  const [options, setOptions] = useState([]);
-  const maxLevels = 10;
 
-  useEffect(() => {
-    const t = animals[Math.floor(Math.random() * animals.length)];
-    setTarget(t);
-    setOptions([...animals].sort(() => Math.random() - 0.5));
-  }, [level]);
+  const target = animals[Math.floor(Math.random() * animals.length)];
+
+  const handleClick = (animal) => {
+    if (animal.name === target.name) {
+      playSound("success");
+      setScore(score + 1);
+      onScoreUpdate && onScoreUpdate(1);
+      speak("Correct!");
+    } else playSound("error");
+  };
 
   return (
-    <div className="game-container">
-      <div className="level-badge">المرحلة: {level} / {maxLevels}</div>
-      <h2>من يصدر هذا الصوت؟</h2>
-      <div style={{ fontSize: '3rem', margin: '30px', color: '#ff9800' }}>" {target.sound} "</div>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '15px' }}>
-        {options.map((a, i) => (
-          <button key={i} onClick={() => {
-            if(a.icon === target.icon) {
-              onScoreUpdate(10);
-              if(level < maxLevels) setTimeout(() => setLevel(level + 1), 500);
-              else onFinish();
-            }
-          }} style={{ fontSize: '4rem', padding: '10px', background: 'white', borderRadius: '20px' }}>
-            {a.icon}
+    <div style={{ padding: 20 }}>
+      <h2>🐾 أي حيوان يصدر الصوت التالي: {target.sound}</h2>
+      <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+        {animals.map((a, i) => (
+          <button
+            key={i}
+            onClick={() => handleClick(a)}
+            style={{ fontSize: 48 }}
+          >
+            {a.name}
           </button>
         ))}
       </div>
+      <p>نقاطك: {score}</p>
+      <button onClick={onFinish} style={{ marginTop: 10 }}>
+        ✅ انتهيت
+      </button>
     </div>
   );
-};
-export default AnimalSounds;
+}

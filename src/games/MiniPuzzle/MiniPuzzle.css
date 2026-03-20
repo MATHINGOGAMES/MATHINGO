@@ -1,0 +1,121 @@
+/* شاشة البداية بنمط الصورة المرسلة */
+.mathingo-start-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* لون خلفية الصورة المرسلة */
+  background-color: #ff9f8c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-family: "Cairo", sans-serif;
+}
+
+.mathingo-card {
+  background: white;
+  padding: 40px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  width: auto;
+  min-width: 350px;
+}
+
+.mathingo-icon {
+  font-size: 100px;
+  margin-bottom: 25px;
+  animation: bounce 1.5s infinite;
+}
+
+.mathingo-title {
+  color: #333;
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
+
+.mathingo-btn-primary {
+  background-color: #58cc02; /* اللون الأخضر في الصورة */
+  color: white;
+  border: none;
+  padding: 18px 50px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 8px 0 #46a302;
+  transition: all 0.1s;
+}
+
+.mathingo-btn-primary:active {
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 #46a302;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* التنسيقات العامة للعبة الذاكرة */
+.puzzle-grid {
+  display: grid;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.grid-size-1 {
+  grid-template-columns: repeat(3, 80px);
+}
+.grid-size-2 {
+  grid-template-columns: repeat(4, 80px);
+}
+.grid-size-3 {
+  grid-template-columns: repeat(5, 70px);
+}
+
+.puzzle-item-btn {
+  font-size: 2.5rem;
+  background: white;
+  border: 3px solid #eee;
+  border-radius: 20px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 5px 0 #ddd;
+}
+
+.puzzle-item-btn.empty {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.puzzle-item-btn:hover {
+  transform: scale(1.1);
+}
+
+.puzzle-item-btn:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+/* ألوان مراحل الذاكرة */
+.stage-1 {
+  background: #ffcf4b;
+}
+.stage-2 {
+  background: #4bffa5;
+}
+.stage-3 {
+  background: #4b90ff;
+}

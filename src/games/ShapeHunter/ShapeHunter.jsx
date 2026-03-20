@@ -1,107 +1,39 @@
-import React, { useState, useEffect } from "react";
+// src/games/ShapeHunter/ShapeHunter.jsx
+import React, { useState } from "react";
+import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 
-const ShapeHunter = ({ onFinish, onScoreUpdate }) => {
-  const shapes = ["🔴", "🟦", "🔺", "⭐", "🌙", "☁️", "🍀", "💎"];
-  const [target, setTarget] = useState("");
-  const [options, setOptions] = useState([]);
-  const [level, setLevel] = useState(1);
-  const maxLevels = 10;
-  const [message, setMessage] = useState("أين هو الشكل المطلوب؟");
+export default function ShapeHunter({ onFinish, onScoreUpdate }) {
+  const { playSound } = useMathingoAudio();
+  const shapes = ["⭕", "⬛", "⭕", "⬛"];
+  const target = "⭕";
+  const [score, setScore] = useState(0);
 
-  const generateLevel = () => {
-    const newTarget = shapes[Math.floor(Math.random() * shapes.length)];
-    setTarget(newTarget);
-
-    const count = Math.min(level < 4 ? 4 : level < 7 ? 6 : 9, shapes.length);
-
-    let newOptions = [newTarget];
-    while (newOptions.length < count) {
-      const s = shapes[Math.floor(Math.random() * shapes.length)];
-      if (!newOptions.includes(s)) newOptions.push(s);
-    }
-
-    setOptions([...newOptions].sort(() => Math.random() - 0.5));
-    setMessage(`ابحث عن: ${newTarget}`);
-  };
-
-  useEffect(() => {
-    generateLevel();
-  }, [level]);
-
-  const check = (s) => {
-    if (s === target) {
-      onScoreUpdate(10);
-
-      if (level < maxLevels) {
-        setLevel((prev) => prev + 1);
-      } else {
-        setMessage("بطلة الأشكال! 🎉");
-        setTimeout(onFinish, 1500);
-      }
-    } else {
-      setMessage("ركزي جيداً.. جربي مرة أخرى! 🧐");
-    }
+  const handleClick = (shape) => {
+    if (shape === target) {
+      playSound("success");
+      setScore(score + 1);
+      onScoreUpdate && onScoreUpdate(1);
+    } else playSound("error");
   };
 
   return (
-    <div
-      className="game-container"
-      style={{ textAlign: "center", padding: "10px" }}
-    >
-      <div
-        style={{
-          background: "#4caf50",
-          color: "white",
-          padding: "8px 15px",
-          borderRadius: "50px",
-          display: "inline-block",
-          marginBottom: "15px",
-          fontSize: "1.2rem",
-        }}
-      >
-        المرحلة: {level} / {maxLevels}
-      </div>
-
-      <h2 style={{ fontSize: "1.4rem", margin: "10px 0" }}>أين هو الشكل:</h2>
-
-      <div style={{ marginBottom: "15px" }}>
-        <span style={{ fontSize: "3.5rem" }}>{target}</span>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: level < 7 ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
-          gap: "12px",
-          marginTop: "10px",
-          justifyItems: "center",
-        }}
-      >
-        {options.map((s, i) => (
+    <div style={{ padding: 20 }}>
+      <h2>⭕ اضغط على الشكل المطلوب</h2>
+      <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+        {shapes.map((s, i) => (
           <button
-            key={`${level}-${i}`}
-            onClick={() => check(s)}
-            style={{
-              fontSize: "3rem",
-              width: "85px",
-              height: "85px",
-              background: "white",
-              borderRadius: "20px",
-              border: "3px solid #f0f0f0",
-              boxShadow: "0 4px #ddd",
-              touchAction: "manipulation",
-            }}
+            key={i}
+            onClick={() => handleClick(s)}
+            style={{ fontSize: 32 }}
           >
             {s}
           </button>
         ))}
       </div>
-
-      <h3 style={{ marginTop: "20px", color: "#555", minHeight: "1.5em" }}>
-        {message}
-      </h3>
+      <p>نقاطك: {score}</p>
+      <button onClick={onFinish} style={{ marginTop: 10 }}>
+        ✅ انتهيت
+      </button>
     </div>
   );
-};
-
-export default ShapeHunter;
+}

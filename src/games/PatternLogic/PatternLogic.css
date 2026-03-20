@@ -1,0 +1,78 @@
+.pattern-display {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+}
+
+.pattern-item {
+  font-size: 3rem;
+  animation: popIn 0.5s ease;
+}
+
+.pattern-item.placeholder {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border: 3px dashed #ccc;
+  border-radius: 15px;
+  color: #ccc;
+  font-weight: bold;
+}
+
+.options-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.option-btn {
+  font-size: 3rem;
+  background: white;
+  border: 3px solid #f0f0f0;
+  border-radius: 20px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 6px 0 #ddd;
+}
+
+.option-btn:hover {
+  transform: translateY(-5px);
+  border-color: #58cc02;
+}
+
+.option-btn:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
+/* ألوان مراحل النمط */
+.stage-1 {
+  background: #55efc4;
+}
+.stage-2 {
+  background: #81ecec;
+}
+.stage-3 {
+  background: #74b9ff;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

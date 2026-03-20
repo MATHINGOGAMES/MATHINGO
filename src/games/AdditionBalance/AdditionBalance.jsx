@@ -1,61 +1,179 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useMathingoAudio } from "../../hooks/useMathingoAudio";
+import "./AdditionBalance.css"; // سنستخدم نفس نمط التصميم
 
-const AdditionBalance = ({ onFinish, onScoreUpdate }) => {
-  const [num1, setNum1] = useState(0);
-  const [num2, setNum2] = useState(0);
-  const [options, setOptions] = useState([]);
-  const [level, setLevel] = useState(1);
-  const maxLevels = 10;
+export default function AdditionBalance({ onFinish, onScoreUpdate }) {
+  const { playSound } = useMathingoAudio();
 
-  const generateLevel = () => {
-    const n1 = Math.floor(Math.random() * level) + 1;
-    const n2 = Math.floor(Math.random() * level) + 1;
-    const correct = n1 + n2;
-    setNum1(n1);
-    setNum2(n2);
+  // 🎮 الحالات الأساسية (3 مراحل، 10 جولات لكل مرحلة)
+  const [currentStage, setCurrentStage] = useState(1);
+  const [round, setRound] = useState(1);
+  const [score, setScore] = useState(0);
+  const [status, setStatus] = useState("idle");
+  const [gameStarted, setGameStarted] = useState(false);
+  const [wormMessage, setWormMessage] = useState(
+    "أهلاً بك في ميزان الجمع! ساعدني في إيجاد الناتج."
+  );
+  const [question, setQuestion] = useState({ a: 0, b: 0, options: [] });
 
-    let ops = new Set([correct]);
-    while (ops.size < 3)
-      ops.add(
+  // 🔊 محرك النطق
+  const speakMessage = useCallback((text) => {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const arabicVoice = voices.find((v) => v.lang.includes("ar"));
+    if (arabicVoice) utterance.voice = arabicVoice;
+    utterance.lang = "ar-SA";
+    utterance.pitch = 1.3;
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }, []);
+
+  // توليد سؤال جمع بناءً على المرحلة
+  const generateQuestion = useCallback((stage) => {
+    const max = stage === 1 ? 5 : stage === 2 ? 10 : 20;
+    const a = Math.floor(Math.random() * max) + 1;
+    const b = Math.floor(Math.random() * max) + 1;
+    const correct = a + b;
+
+    // توليد خيارات ذكية (قريبة من الإجابة الصحيحة)
+    let options = new Set([correct]);
+    while (options.size < 3) {
+      const wrong =
         correct +
-          (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 3) + 1)
-      );
-    setOptions([...ops].sort((a, b) => a - b));
-  };
+        (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 3) + 1);
+      if (wrong > 0) options.add(wrong);
+    }
+
+    return {
+      a,
+      b,
+      correct,
+      options: Array.from(options).sort((x, y) => x - y),
+    };
+  }, []);
 
   useEffect(() => {
-    generateLevel();
-  }, [level]);
+    setQuestion(generateQuestion(currentStage));
+  }, [currentStage, generateQuestion]);
 
-  const check = (val) => {
-    if (val === num1 + num2) {
-      onScoreUpdate(20);
-      if (level < maxLevels) setLevel(level + 1);
-      else onFinish();
+  useEffect(() => {
+    if (gameStarted && wormMessage) {
+      const timer = setTimeout(() => speakMessage(wormMessage), 100);
+      return () => clearTimeout(timer);
     }
+  }, [wormMessage, gameStarted, speakMessage]);
+
+  const handleAnswer = (choice) => {
+    if (status !== "idle") return;
+
+    const isCorrect = choice === question.correct;
+
+    if (isCorrect) {
+      setStatus("correct");
+      setWormMessage(
+        Math.random() > 0.5 ? "يا لك من ذكي!" : "إجابة صحيحة تماماً!"
+      );
+      playSound("success");
+      setScore((s) => s + 1);
+      onScoreUpdate?.(1);
+    } else {
+      setStatus("wrong");
+      setWormMessage("أوبس! حاول مرة أخرى يا بطل.");
+      playSound("error");
+    }
+
+    setTimeout(() => {
+      if (round < 10) {
+        setRound((r) => r + 1);
+        setQuestion(generateQuestion(currentStage));
+        setStatus("idle");
+      } else {
+        if (currentStage < 3) {
+          setWormMessage("رائع! لقد أنهيت المرحلة بنجاح.");
+          setTimeout(() => {
+            setCurrentStage((s) => s + 1);
+            setRound(1);
+            setStatus("idle");
+          }, 2000);
+        } else {
+          onFinish?.();
+        }
+      }
+    }, 1500);
   };
 
-  return (
-    <div className="game-container">
-      <div className="level-badge">
-        المرحلة: {level} / {maxLevels}
-      </div>
-      <div style={{ fontSize: "4rem", margin: "40px 0" }}>
-        {num1} + {num2} = <span style={{ color: "#ff9800" }}>؟</span>
-      </div>
-      <div style={{ display: "flex", justifyContent: "center", gap: "15px" }}>
-        {options.map((opt, i) => (
-          <button
-            key={i}
-            className="choice-btn"
-            onClick={() => check(opt)}
-            style={{ fontSize: "2.5rem", width: "80px" }}
-          >
-            {opt}
+  if (!gameStarted) {
+    return (
+      <div className="start-overlay">
+        <div className="start-box">
+          <div className="worm-intro">🐊</div>
+          <h2>ميزان الجمع الذكي</h2>
+          <p>ساعد الدودة في جمع الأرقام بشكل صحيح!</p>
+          <button className="start-btn" onClick={() => setGameStarted(true)}>
+            🚀 ابدأ التحدي الآن
           </button>
-        ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`compare-wrapper stage-${currentStage}`}>
+      <div className="game-container">
+        {/* 🐛 منطقة الدودة */}
+        <div className="worm-section">
+          <div className="bubble-container">
+            <div className="speech-bubble">{wormMessage}</div>
+          </div>
+          <div className={`worm-avatar ${status === "correct" ? "happy" : ""}`}>
+            <span role="img" className="worm-emoji">
+              🐊
+            </span>
+          </div>
+        </div>
+
+        {/* 📊 شريط التقدم */}
+        <div className="top-bar">
+          <div className="badge level-badge">المرحلة {currentStage}</div>
+          <div className="progress-outer">
+            <div
+              className="progress-inner"
+              style={{ width: `${(round / 10) * 100}%` }}
+            ></div>
+          </div>
+          <div className="badge round-badge">{round}/10</div>
+        </div>
+
+        {/* 🎮 الميزان (بطاقة اللعبة) */}
+        <div className={`game-card-main ${status}`}>
+          <h2 className="balance-title">كم يساوي المجموع؟</h2>
+          <div className="numbers-display">
+            <div className="number-card balance-card">
+              {question.a} + {question.b}
+            </div>
+            <div className="operator-slot">=</div>
+            <div className="number-card result-placeholder">
+              {status === "correct" ? question.correct : "?"}
+            </div>
+          </div>
+
+          <div className="buttons-grid">
+            {question.options.map((option) => (
+              <button
+                key={option}
+                className="action-btn"
+                onClick={() => handleAnswer(option)}
+                disabled={status !== "idle"}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          <div className="current-score">⭐ النقاط: {score}</div>
+        </div>
       </div>
     </div>
   );
-};
-export default AdditionBalance;
+}

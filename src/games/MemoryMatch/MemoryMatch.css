@@ -1,7 +1,7 @@
 /* مصفوفة احترافية متجاوبة */
 .memory-premium-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+
   gap: 10px;
   perspective: 1000px;
   padding: 10px;
@@ -132,4 +132,8 @@
   100% {
     transform: scale(1);
   }
+}
+.card-scene {
+  aspect-ratio: 1 / 1; /* 👈 يضمن أن تظل البطاقة مربعة تماماً مهما كان عدد الأعمدة */
+  perspective: 1000px;
 }

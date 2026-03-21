@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { GAMES_LIST } from "../../games"; // استيراد القائمة من سجل الألعاب
+import { MATHINGO_GAMES } from "../../data/gamesConfig"; // ✅ الاستيراد صحيح هنا
 import "./GameSelection.css";
 
 const GameSelection = ({ onSelectGame }) => {
@@ -10,14 +10,16 @@ const GameSelection = ({ onSelectGame }) => {
     <div className="game-selection-container">
       <h1 className="main-title">{t("welcome")}</h1>
       <div className="games-grid">
-        {GAMES_LIST.map((game) => (
+        {/* 🚀 التعديل هنا: نستخدم MATHINGO_GAMES بدلاً من GAMES_LIST */}
+        {MATHINGO_GAMES.map((game) => (
           <button
             key={game.id}
             className="game-card"
+            style={{ "--card-color": game.color }} // لإعطاء كل بطاقة لونها المميز
             onClick={() => onSelectGame(game.id)}
           >
-            <span className="game-icon">{game.flag || game.icon}</span>
-            <span className="game-name">{t(game.id) || game.name}</span>
+            <span className="game-icon">{game.icon}</span>
+            <span className="game-name">{game.title || t(game.id)}</span>
           </button>
         ))}
       </div>
@@ -25,5 +27,4 @@ const GameSelection = ({ onSelectGame }) => {
   );
 };
 
-// هذا هو السطر الذي يحل الخطأ الحالي 👇
 export default GameSelection;

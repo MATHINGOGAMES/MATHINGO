@@ -1,0 +1,151 @@
+/* --- src/games/SmartNumberPuzzlePro/SmartNumberPuzzlePro.css --- */
+
+.puzzle-pro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 30px;
+  background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+  border-radius: 40px;
+  min-height: 400px;
+}
+
+.puzzle-title {
+  color: #1e293b;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+/* 🔢 منطقة الأرقام (Pool) */
+.numbers-pool {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  border: 2px dashed #cbd5e1;
+}
+
+.puzzle-number-card {
+  width: 70px;
+  height: 70px;
+  background: #ffcc00; /* لون ذهبي جذاب */
+  color: #000;
+  font-size: 2.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  cursor: grab;
+  box-shadow: 0 6px 0 #cca300; /* تأثير 3D */
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.puzzle-number-card:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #cca300;
+}
+
+/* 🎯 منطقة الإسقاط (Slots) */
+.slots-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.drop-zone {
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border: 4px solid #e2e8f0;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #64748b;
+  transition: all 0.3s;
+}
+
+/* حالات التغذية الراجعة */
+.drop-zone.success {
+  border-color: #22c55e;
+  background: #f0fdf4;
+  color: #15803d;
+  animation: celebrate 0.5s ease;
+}
+
+.drop-zone.fail {
+  border-color: #ef4444;
+  background: #fef2f2;
+  color: #b91c1c;
+  animation: shake 0.4s;
+}
+
+/* ✨ حركات احترافية */
+@keyframes celebrate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+.feedback-message {
+  font-size: 1.5rem;
+  font-weight: bold;
+  height: 30px;
+}
+/* تأثير النبض للمربعات الفارغة لتوجيه الطفل */
+.drop-zone:empty::before {
+  content: "?";
+  opacity: 0.5;
+  animation: pulse-hint 1.5s infinite;
+}
+
+@keyframes pulse-hint {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+}
+
+/* تحسين شكل عنوان اللعبة */
+.puzzle-pro-container h2 {
+  font-family: "Cairo", sans-serif;
+  color: #2c3e50;
+  text-shadow: 1px 1px 0px white;
+  margin-bottom: 20px;
+}

@@ -13,7 +13,7 @@ export default function ComparingNumbers({ onFinish, onScoreUpdate }) {
   const [score, setScore] = useState(0);
   const [status, setStatus] = useState("idle");
   const [wormMessage, setWormMessage] = useState(
-    "مرحباً! أنا الدودة الذكية، هل أنت مستعد؟"
+    "مرحباً! أنا التمساخ الذكي، هل أنت مستعد؟"
   );
   const [gameStarted, setGameStarted] = useState(false);
 

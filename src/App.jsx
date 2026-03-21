@@ -4,56 +4,56 @@ import { useGameEngine } from "./hooks/useGameEngine";
 import GameLayout from "./components/layout/GameLayout";
 import GameSelection from "./components/GameSelection/GameSelection";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
-import { GAMES_COMPONENTS } from "./games"; // تأكد من وجود هذا الاستيراد
+import { MATHINGO_GAMES } from "./data/gamesConfig"; // الاعتماد على هذا المصدر
 import "./App.css";
 
 const App = () => {
   const { t } = useTranslation();
-  // المحرك العام للعبة (النقاط والمستويات)
-  const {
-    score,
-    level,
-    incrementScore,
-    goToNextLevel,
-    resetGame,
-  } = useGameEngine("easy");
 
-  // الحالة التي تخزن اللعبة المختارة حالياً
+  // 1️⃣ أولاً: تعريف الـ States الأساسية
   const [activeGameId, setActiveGameId] = useState(null);
+  const [currentLevel, setCurrentLevel] = useState(1);
 
-  // السطر السحري: استخراج المكون البرمجي بناءً على الـ ID المختار
-  const ActiveGameComponent = activeGameId
-    ? GAMES_COMPONENTS[activeGameId]
-    : null;
+  // 2️⃣ ثانياً: تفعيل محرك اللعبة
+  const { score, incrementScore, resetGame } = useGameEngine("easy");
+
+  // 3️⃣ ثالثاً: البحث عن اللعبة النشطة من ملف الإعدادات الموحد
+  const activeGameData = MATHINGO_GAMES.find((g) => g.id === activeGameId);
+  const ActiveGameComponent = activeGameData ? activeGameData.component : null;
+
+  // ✅ معالج إنهاء المستوى
+  const handleLevelComplete = () => {
+    console.log("تم إنهاء المستوى:", currentLevel);
+    setCurrentLevel((prev) => prev + 1);
+  };
+
+  // 🔁 العودة للقائمة الرئيسية
+  const handleBack = () => {
+    setActiveGameId(null);
+    resetGame();
+    setCurrentLevel(1);
+  };
 
   return (
     <div className="app-root">
-      {/* 1. مبدل اللغات يظهر دائماً */}
       <LanguageSwitcher />
 
-      {/* 2. إذا لم يتم اختيار لعبة، اظهر شاشة الاختيار */}
       {!activeGameId ? (
+        // واجهة اختيار الألعاب
         <GameSelection onSelectGame={(id) => setActiveGameId(id)} />
       ) : (
-        /* 3. إذا تم اختيار لعبة، اظهر واجهة اللعب */
+        // واجهة اللعبة النشطة
         <div className="game-screen">
-          <button
-            className="back-btn"
-            onClick={() => {
-              setActiveGameId(null);
-              resetGame();
-            }}
-          >
+          <button className="back-btn" onClick={handleBack}>
             {t("back")}
           </button>
 
-          <GameLayout score={score} level={level}>
-            {/* تشغيل المكون الفعلي للعبة وتمرير الوظائف له */}
+          <GameLayout score={score} level={currentLevel}>
             {ActiveGameComponent ? (
               <ActiveGameComponent
-                level={level}
+                level={currentLevel}
                 onMatch={() => incrementScore(10)}
-                onComplete={goToNextLevel}
+                onComplete={handleLevelComplete}
               />
             ) : (
               <div className="error-msg">
@@ -61,6 +61,10 @@ const App = () => {
               </div>
             )}
           </GameLayout>
+
+          <div className="level-indicator">
+            🎯 {t("level")}: {currentLevel}
+          </div>
         </div>
       )}
     </div>

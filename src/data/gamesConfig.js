@@ -16,7 +16,26 @@ import TimeFun from "../games/TimeFun/TimeFun";
 import AnimalHome from "../games/AnimalHome/AnimalHome";
 import HalfMatch from "../games/HalfMatch/HalfMatch";
 import AnimalSounds from "../games/AnimalSounds/AnimalSounds";
+import NumberComparison from "../games/NumberComparison/NumberComparison";
+import SmartNumberPuzzlePro from "../games/SmartNumberPuzzlePro/SmartNumberPuzzlePro";
 export const MATHINGO_GAMES = [
+  {
+    id: "smart-puzzle-pro",
+    titleKey: "smart_puzzle_pro_max_title",
+    icon: "🧩",
+    color: "#4CAF50",
+    component: SmartNumberPuzzlePro,
+  },
+  {
+    id: "numbers", // المعرف الذي نستخدمه في App.jsx
+    title: "تمساح ",
+    icon: "🐊",
+    color: "#22c55e",
+    component: NumberComparison, // المكون الذي برمجناه للتو
+    minLevel: 1,
+    sendScore: true,
+    useOnFinish: true,
+  },
   {
     id: "comparing-numbers",
     title: "تمساح الأرقام",

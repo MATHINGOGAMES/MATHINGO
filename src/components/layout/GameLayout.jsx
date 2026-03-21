@@ -1,22 +1,32 @@
 import React from "react";
-import "./GameLayout.css"; // تأكد من وجود ملف التنسيق أو احذف السطر إذا لم ينشأ بعد
+import { useTranslation } from "react-i18next"; // ✅ الخطوة 1: استيراد هوك الترجمة
+import "./GameLayout.css";
 
-const GameLayout = ({ children, score, level }) => {
+const GameLayout = ({ children, score, level, title }) => {
+  const { t } = useTranslation(); // ✅ الخطوة 2: تعريف دالة t داخل المكون
+
   return (
-    <div className="game-layout-container">
-      <header className="game-header">
-        <div className="stat-box">
-          <span>⭐ {score}</span>
+    <div className="game-screen-wrapper">
+      {/* البار العلوي الاحترافي */}
+      <div className="game-top-bar">
+        <div className="stat-item score">
+          <span className="stat-icon">⭐</span>
+          <span className="stat-value">{score}</span>
         </div>
-        <div className="stat-box">
-          <span>Level: {level}</span>
-        </div>
-      </header>
 
-      <main className="game-content">{children}</main>
+        <h2 className="game-active-title">{title}</h2>
+
+        <div className="stat-item level">
+          <span className="stat-icon">🎯</span>
+          {/* ✅ الآن t("level") ستعمل ولن تسبب خطأ */}
+          <span className="stat-label">{t("level")}:</span>
+          <span className="stat-value">{level}</span>
+        </div>
+      </div>
+
+      <div className="game-main-content">{children}</div>
     </div>
   );
 };
 
-// السطر السحري الذي يحل المشكلة الحالية 👇
 export default GameLayout;

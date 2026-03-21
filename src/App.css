@@ -1,106 +1,49 @@
-/* تنسيقات عامة للموقع */
 :root {
-  --primary-color: #4caf50;
-  --secondary-color: #ff9800;
-  --bg-color: #f0fdf4;
-  --text-color: #2d3436;
+  --primary-bg: #f0f9ff;
+  --accent-color: #ffcc00;
+  --success-color: #4caf50;
+  --text-main: #333;
+  --font-kids: "Inter", system-ui, sans-serif;
 }
 
-.app-container {
-  text-align: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary-bg);
+  font-family: var(--font-kids);
+  overflow-x: hidden;
+}
+
+.app-root {
   min-height: 100vh;
-  direction: rtl; /* ليكون مناسباً للغة العربية */
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.app-header {
-  background-color: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-/* تكبير الأزرار بشكل عام */
-button {
-  cursor: pointer;
+/* زر الرجوع بشكل مميز */
+.back-btn {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  padding: 12px 25px;
+  font-size: 1.2rem;
+  background: #ff5252;
+  color: white;
   border: none;
-  border-radius: 12px;
-  transition: transform 0.2s;
-  font-weight: bold;
-}
-
-button:active {
-  transform: scale(0.9);
-}
-
-/* 📱 تحسينات خاصة للهواتف (لتكبير الأيقونات والأشكال) */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 1.2rem;
-  }
-
-  /* تكبير الأزرار في الألعاب */
-  .game-option,
-  .choice-btn {
-    width: 90px !important;
-    height: 90px !important;
-    font-size: 2rem !important; /* تكبير الأرقام داخل الأزرار */
-    margin: 10px !important;
-  }
-
-  /* تكبير الصور والأيقونات (مثل الفواكه والحيوانات) */
-  .game-icon,
-  img {
-    width: 120px !important;
-    height: auto !important;
-  }
-
-  /* تحسين عرض القائمة الرئيسية */
-  .games-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* جعلها صفين بدلاً من قائمة طويلة */
-    gap: 15px;
-  }
-
-  .game-card {
-    padding: 15px;
-    font-size: 1rem;
-  }
-}
-
-/* شاشة الفوز */
-.success-message {
-  font-size: 2rem;
-  color: var(--primary-color);
-  animation: bounce 0.5s infinite alternate;
-}
-
-@keyframes bounce {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-10px);
-  }
-}
-.choice-btn {
-  font-size: 3rem !important; /* أرقام ضخمة */
-  padding: 20px 40px !important;
-  border-radius: 20px !important;
-  background-color: #ff9800;
-  color: white;
-  box-shadow: 0 5px #e68a00;
-}
-
-.level-badge {
-  background: #4caf50;
-  color: white;
-  padding: 10px 20px;
   border-radius: 50px;
-  display: inline-block;
-  margin-bottom: 20px;
-  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+[dir="rtl"] .back-btn {
+  right: auto;
+  left: 20px;
+}
+
+.back-btn:hover {
+  transform: scale(1.1);
+  background: #ff1744;
 }

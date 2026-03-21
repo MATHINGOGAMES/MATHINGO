@@ -1,333 +1,135 @@
-.compare-wrapper {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.5s;
-  padding: 20px;
-}
-
-.game-container {
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* 🐛 الدودة والفقاعة */
-.worm-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.speech-bubble {
-  background: white;
-  padding: 15px 20px;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  font-weight: bold;
-  position: relative;
-  font-size: 1.1rem;
-}
-
-.worm-avatar {
-  font-size: 70px;
-  background: white;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 4px solid #58cc02;
-}
-
-/* 📊 التقدم */
-.top-bar {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.badge {
-  background: #fff;
-  padding: 5px 12px;
-  border-radius: 12px;
-  font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.progress-outer {
-  flex-grow: 1;
-  height: 12px;
-  background: #e5e5e5;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.progress-inner {
-  height: 100%;
-  background: #58cc02;
-  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* 🎮 البطاقة الرئيسية */
-.game-card-main {
-  background: white;
-  border-radius: 30px;
-  padding: 40px 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 35px;
-}
-
-.numbers-display {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.number-card {
-  width: 100px;
-  height: 100px;
-  border: 4px solid #f0f0f0;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  font-weight: bold;
-  color: #1cb0f6;
-  transition: 0.3s;
-}
-
-.operator-slot {
-  font-size: 50px;
-  color: #ccc;
-  width: 60px;
-}
-
-.buttons-grid {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.action-btn {
-  font-size: 30px;
-  padding: 15px 30px;
-  border-radius: 18px;
-  border: none;
-  background: #f7f7f7;
-  color: #4b4b4b;
-  cursor: pointer;
-  border-bottom: 5px solid #e5e5e5;
-  transition: 0.1s;
-}
-
-.action-btn:active {
-  transform: translateY(4px);
-  border-bottom-width: 1px;
-}
-
-/* الألوان حسب الحالة */
-.game-card-main.correct {
-  border: 4px solid #58cc02;
-}
-.game-card-main.wrong {
-  border: 4px solid #ff4b4b;
-  animation: shake 0.4s;
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-8px);
-  }
-  75% {
-    transform: translateX(8px);
-  }
-}
-
-.stage-1 {
-  background: #ff9a62;
-}
-.stage-2 {
-  background: #2fced1;
-}
-.stage-3 {
-  background: #9262ff;
-}
-/* شاشة البداية (لتجاوز حظر الصوت في المتصفح) */
-.start-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 126, 95, 0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  font-family: "Cairo", sans-serif;
-}
-
-.start-box {
-  background: white;
-  padding: 40px;
-  border-radius: 30px;
-  text-align: center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-}
-
-.worm-intro {
-  font-size: 80px;
-  margin-bottom: 20px;
-  animation: bounce 1s infinite;
-}
-
-.start-btn {
-  background: #58cc02;
-  color: white;
-  border: none;
-  padding: 15px 40px;
-  font-size: 24px;
-  font-weight: bold;
-  border-radius: 20px;
-  cursor: pointer;
-  border-bottom: 5px solid #46a302;
-  transition: 0.1s;
-}
-
-.start-btn:active {
-  transform: translateY(4px);
-  border-bottom: none;
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-/* استلهم التنسيقات العامة من الألعاب السابقة وأضف هذه التعديلات */
-
-.fruits-display {
-  display: flex;
-  flex-wrap: wrap; /* لجعل الفواكه تنزل لسطر جديد إذا كانت كثيرة */
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  min-height: 120px;
-  background: #fdfdfd;
-  padding: 20px;
-  border-radius: 20px;
-  border: 2px dashed #e0e0e0;
-}
-
-.fruit-item {
-  font-size: 50px; /* حجم الفاكهة */
-  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.1));
-  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popIn {
-  from {
-    transform: scale(0);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-/* ألوان مراحل العدّ */
-.stage-1 {
-  background: #ff9a9e;
-} /* وردي ناعم */
-.stage-2 {
-  background: #a18cd1;
-} /* بنفسجي فاتح */
-.stage-3 {
-  background: #84fab0;
-} /* أخضر تفاحي */
-/* الشبكة المرنة للبطاقات */
-.memory-grid {
+/* مصفوفة احترافية متجاوبة */
+.memory-premium-grid {
   display: grid;
-  gap: 15px;
-  justify-content: center;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  perspective: 1000px;
+  padding: 10px;
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto;
 }
 
-/* توزيع الأعمدة حسب المرحلة */
-.grid-cols-1 {
-  grid-template-columns: repeat(2, 80px);
-}
-.grid-cols-2 {
-  grid-template-columns: repeat(3, 80px);
-} /* أو 4 حسب العدد */
-.grid-cols-3 {
-  grid-template-columns: repeat(4, 70px);
+/* مشهد البطاقة للـ 3D */
+.card-scene {
+  aspect-ratio: 1 / 1.2;
 }
 
-.memory-card {
+.card-item {
   width: 100%;
-  height: 80px;
+  height: 100%;
   position: relative;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform-style: preserve-3d;
-  transition: transform 0.5s;
   cursor: pointer;
 }
 
-.memory-card.flipped {
+.card-item.is-flipped {
   transform: rotateY(180deg);
 }
 
-.card-front,
-.card-back {
+.card-face {
   position: absolute;
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  border-radius: 12px;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.card-front {
+.card-front-face {
+  background: linear-gradient(135deg, #ff9800, #f44336);
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.card-back-face {
   background: white;
   transform: rotateY(180deg);
-  border: 3px solid #58cc02;
+  font-size: 2.5rem;
 }
 
-.card-back {
-  background: #1cb0f6;
-  color: white;
-  font-size: 1.5rem;
-  border-bottom: 5px solid #1899d6;
+/* تأثير عند المطابقة الناجحة */
+.card-done {
+  animation: celebrate 0.5s ease-in-out;
+  opacity: 0.8;
 }
 
-/* ألوان الخلفية للمراحل */
-.stage-1 {
-  background: #ffcf4b;
+@keyframes celebrate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    rotate: 5deg;
+  }
+  100% {
+    transform: scale(1);
+    rotate: 0;
+  }
 }
-.stage-2 {
-  background: #4bffa5;
+
+/* تأثير الفوز النهائي */
+.win-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px 40px;
+  border-radius: 50px;
+  font-size: 2rem;
+  color: #ff9800;
+  font-weight: bold;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.stage-3 {
-  background: #4b90ff;
+/* تأثير هز التمساح عند تمرير الفأرة أو اللمس */
+.card-item:hover .card-front-face {
+  animation: wiggle 0.3s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes pop-in {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* حركات الأزرار */
+.pulse {
+  animation: pulse-btn 2s infinite;
+}
+@keyframes pulse-btn {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

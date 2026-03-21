@@ -2,114 +2,90 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useMathingoAudio } from "../../hooks/useMathingoAudio";
 import "./MemoryMatch.css";
 
-export default function MemoryMatch({ onFinish, onScoreUpdate }) {
-  const { playSound } = useMathingoAudio();
+const CARD_IMAGES = ["🍎", "🍌", "🍇", "🍓", "🍒", "🍍", "🥝", "🍋"];
 
-  // 🎮 الحالات الأساسية
-  const [currentStage, setCurrentStage] = useState(1);
+export default function MemoryMatch({
+  level,
+  onMatch,
+  onComplete,
+  onScoreUpdate,
+}) {
+  const { playSound } = useMathingoAudio();
+  const [gameStarted, setGameStarted] = useState(false);
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]);
   const [matched, setMatched] = useState([]);
-  const [score, setScore] = useState(0);
-  const [status, setStatus] = useState("idle");
-  const [gameStarted, setGameStarted] = useState(false);
-  const [wormMessage, setWormMessage] = useState(
-    "أين تختبئ الصور المتشابهة؟ ركز جيداً!"
-  );
+  const [disabled, setDisabled] = useState(false);
+  const [showWinEffect, setShowWinEffect] = useState(false);
 
-  // 🔊 محرك النطق
-  const speakMessage = useCallback((text) => {
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    const arabicVoice = voices.find((v) => v.lang.includes("ar"));
-    if (arabicVoice) utterance.voice = arabicVoice;
-    utterance.lang = "ar-SA";
-    utterance.pitch = 1.4;
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
-  }, []);
-
-  // توليد البطاقات بناءً على المرحلة
-  const generateCards = useCallback((stage) => {
-    const icons = ["🍎", "🍌", "🍓", "🍇", "🍊", "🍍", "🥝", "🍉"];
-    // عدد الأزواج: المرحلة 1 (2 أزواج)، المرحلة 2 (4 أزواج)، المرحلة 3 (6 أزواج)
-    const pairsCount = stage === 1 ? 2 : stage === 2 ? 4 : 6;
-    const selectedIcons = icons.slice(0, pairsCount);
-    const deck = [...selectedIcons, ...selectedIcons].sort(
-      () => Math.random() - 0.5
-    );
-    return deck;
-  }, []);
-
-  // البداية وتغيير المراحل
-  useEffect(() => {
-    setCards(generateCards(currentStage));
+  const generateLevel = useCallback(() => {
+    let pairCount = level <= 1 ? 4 : level === 2 ? 6 : 8;
+    const selectedIcons = CARD_IMAGES.slice(0, pairCount);
+    const shuffledCards = [...selectedIcons, ...selectedIcons]
+      .sort(() => Math.random() - 0.5)
+      .map((icon, index) => ({ id: `card-${index}-${Date.now()}`, icon }));
+    setCards(shuffledCards);
     setMatched([]);
     setFlipped([]);
-  }, [currentStage, generateCards]);
+    setDisabled(false);
+    setShowWinEffect(false);
+  }, [level]);
 
   useEffect(() => {
-    if (gameStarted && wormMessage) {
-      const timer = setTimeout(() => speakMessage(wormMessage), 100);
-      return () => clearTimeout(timer);
-    }
-  }, [wormMessage, gameStarted, speakMessage]);
+    if (gameStarted) generateLevel();
+  }, [gameStarted, generateLevel]);
 
-  const handleFlip = (index) => {
-    if (
-      flipped.length === 2 ||
-      flipped.includes(index) ||
-      matched.includes(index)
-    )
-      return;
+  const handleCardClick = (index) => {
+    if (disabled || flipped.includes(index) || matched.includes(index)) return;
 
     const newFlipped = [...flipped, index];
     setFlipped(newFlipped);
 
     if (newFlipped.length === 2) {
+      setDisabled(true);
       const [first, second] = newFlipped;
-      if (cards[first] === cards[second]) {
-        // ✅ تطابق صحيح
-        playSound("success");
-        const newMatched = [...matched, first, second];
-        setMatched(newMatched);
-        setScore((s) => s + 1);
-        onScoreUpdate?.(1);
-        setWormMessage("رائع! ذاكرتك قوية جداً.");
-        setFlipped([]);
 
-        // التحقق من نهاية المرحلة
-        if (newMatched.length === cards.length) {
-          setTimeout(() => {
-            if (currentStage < 3) {
-              setWormMessage("أنهيت المرحلة! لنزد عدد البطاقات الآن.");
-              setTimeout(() => setCurrentStage((s) => s + 1), 2000);
-            } else {
-              setWormMessage("أنت ملك الذاكرة! أحسنت صنعاً.");
-              onFinish?.();
-            }
-          }, 1000);
-        }
+      if (cards[first].icon === cards[second].icon) {
+        // ✅ تطابق صحيح
+        setTimeout(() => {
+          setMatched((prev) => [...prev, first, second]);
+          setFlipped([]);
+          setDisabled(false);
+          playSound("success"); // تأكدي أن هذا الصوت موجود في هوك الصوت الخاص بكِ
+          onMatch?.();
+          onScoreUpdate?.(10);
+        }, 300);
       } else {
         // ❌ خطأ
-        playSound("error");
-        setWormMessage("لا بأس، حاول تذكر مكانها.");
-        setTimeout(() => setFlipped([]), 1000);
+        setTimeout(() => {
+          setFlipped([]);
+          setDisabled(false);
+        }, 800);
       }
     }
   };
 
+  useEffect(() => {
+    if (cards.length > 0 && matched.length === cards.length) {
+      setShowWinEffect(true);
+      setTimeout(onComplete, 2500);
+    }
+  }, [matched, cards, onComplete]);
+
   if (!gameStarted) {
     return (
-      <div className="start-overlay">
-        <div className="start-box">
-          <div className="worm-intro">🧠</div>
-          <h2>تحدي الذاكرة الذكي</h2>
-          <p>ابحث عن الأزواج المتشابهة في أقل وقت ممكن!</p>
-          <button className="start-btn" onClick={() => setGameStarted(true)}>
-            🚀 اختبر ذاكرتي
+      <div className="mathingo-start-overlay">
+        <div className="mathingo-card pop-in">
+          <div className="mathingo-icon-bounce">🧠</div>
+          <h2 className="mathingo-title">لعبة الذاكرة الذكية</h2>
+          <p style={{ marginBottom: "20px", color: "#666" }}>
+            هل يمكنكِ إيجاد كل الأزواج؟
+          </p>
+          <button
+            className="mathingo-btn-primary pulse"
+            onClick={() => setGameStarted(true)}
+          >
+            🚀 هيا بنا نلعب!
           </button>
         </div>
       </div>
@@ -117,51 +93,42 @@ export default function MemoryMatch({ onFinish, onScoreUpdate }) {
   }
 
   return (
-    <div className={`compare-wrapper stage-${currentStage}`}>
+    <div className="compare-wrapper">
+      {showWinEffect && (
+        <div className="win-overlay">⭐ أحسنتِ يا بطلة! ⭐</div>
+      )}
+
       <div className="game-container">
         <div className="worm-section">
           <div className="bubble-container">
-            <div className="speech-bubble">{wormMessage}</div>
+            <div className="speech-bubble">
+              رائع! ابحثي عن الفواكه المتشابهة 🍎
+            </div>
           </div>
-          <div className="worm-avatar">
-            <span role="img" className="worm-emoji">
-              🐊
-            </span>
-          </div>
-        </div>
-
-        <div className="top-bar">
-          <div className="badge level-badge">المرحلة {currentStage}</div>
-          <div className="progress-outer">
-            <div
-              className="progress-inner"
-              style={{ width: `${(matched.length / cards.length) * 100}%` }}
-            ></div>
-          </div>
-          <div className="badge round-badge">
-            {matched.length / 2} / {cards.length / 2}
-          </div>
+          <div className="worm-avatar">🐊</div>
         </div>
 
         <div className="game-card-main">
-          <div className={`memory-grid grid-cols-${currentStage}`}>
+          <div className="memory-premium-grid">
             {cards.map((card, index) => {
-              const isFlipped =
-                flipped.includes(index) || matched.includes(index);
+              const isOpen = flipped.includes(index) || matched.includes(index);
+              const isMatched = matched.includes(index);
+
               return (
                 <div
-                  key={index}
-                  className={`memory-card ${isFlipped ? "flipped" : ""}`}
-                  onClick={() => handleFlip(index)}
+                  key={card.id}
+                  className={`card-scene ${isMatched ? "card-done" : ""}`}
                 >
-                  <div className="card-front">{card}</div>
-                  <div className="card-back">❓</div>
+                  <div
+                    className={`card-item ${isOpen ? "is-flipped" : ""}`}
+                    onClick={() => handleCardClick(index)}
+                  >
+                    <div className="card-face card-front-face">🐊</div>
+                    <div className="card-face card-back-face">{card.icon}</div>
+                  </div>
                 </div>
               );
             })}
-          </div>
-          <div className="current-score">
-            ⭐ التطابقات: {matched.length / 2}
           </div>
         </div>
       </div>
